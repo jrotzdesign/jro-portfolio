@@ -1,0 +1,10 @@
+---
+// Card / hero media for a project: its image, or a typographic tile when there is no image yet.
+// `name` gives the element a view-transition name so the card image flies into the project hero.
+interface Props { p: any; loading?: 'lazy' | 'eager' }
+const { p, loading = 'lazy' } = Astro.props;
+const name = `media-${p.slug}`;
+---
+{p.img
+  ? <img src={p.img} alt={p.t} loading={loading} decoding="async" transition:name={name} />
+  : <div class="tile" style={p.bg ? `background:${p.bg}` : undefined} transition:name={name}>{p.tile}</div>}

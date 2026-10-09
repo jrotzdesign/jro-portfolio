@@ -1,0 +1,10 @@
+---
+// A static JRO mark rendered server-side (so it is there before any JS), at weight w ∈ [0,2] and height h ∈ [0,1].
+import { makeJRO, staticMark } from '../lib/morph.js';
+import JRO from '../data/jro3.json';
+interface Props { w?: number; h?: number; id?: string; class?: string }
+const { w = 0, h = 0, id, class: cls } = Astro.props;
+const M = makeJRO(JRO);
+const m = staticMark(M, w, h);
+---
+<svg id={id} class={cls} viewBox={m.viewBox} aria-hidden="true">{m.d.map((d) => <path d={d} fill-rule="evenodd" />)}</svg>

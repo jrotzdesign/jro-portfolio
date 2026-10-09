@@ -1,0 +1,123 @@
+---
+import Base from '../layouts/Base.astro';
+import Mark from '../components/Mark.astro';
+import Media from '../components/Media.astro';
+import { projects, bySlug } from '../data/projects.js';
+
+const chapters = [
+  { id: 'ch1', n: '001', bg: 'bone', label: 'Brand systems', word: 'Brand', slugs: ['towne', 'glades-west', 'carlton-shores'],
+    copy: 'Identity, naming, Pantone-matched palettes, print and signage — logo families that hold up across dozens of facilities.',
+    meta: ['Illustrator · Figma · InDesign', 'Mozart&Co. · 2025'] },
+  { id: 'ch2', n: '002', bg: 'night', label: 'Web at scale', word: 'Web', slugs: ['prestige', 'lionstone', 'mozart'],
+    copy: '57 facility sites on Webflow template systems, the agency’s own Astro build on Cloudflare, and the operations that keep all of it publishing.',
+    meta: ['Webflow · Astro · Cloudflare', 'Mozart&Co. · 2024 — 26'] },
+  { id: 'ch3', n: '003', bg: 'bone', label: 'Motion & retail', word: 'Motion', slugs: ['lumberjack', 'woodies', 'oneparkway'],
+    copy: 'Logo intros, looping event graphics, scroll choreography, and the Shopify builds behind two Hermosillo-to-New-York brands.',
+    meta: ['After Effects · GSAP · Shopify', 'JRO Design · 2019 — 26'] },
+];
+const count = String(chapters.length).padStart(3, '0');
+const words = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'];
+const row = [[0,0],[1,0],[2,0],[0,1],[1,1],[2,1],[0,0],[1,0],[2,0],[0,1],[1,1],[2,1]];
+const mail = 'hello@jrortizdesign.com';
+---
+<Base>
+<main id="home">
+<nav class="nav" id="nav">
+  <a class="nav__slot" href="#top" aria-label="JRO"><Mark id="navMark" /></a>
+  <div class="nav__c">
+    {chapters.map((c) => <a class="t" href={`#${c.id}`}>{c.word}</a>)}
+    <a class="t" href="#index">Index</a><a class="t" href="#contact">Contact</a>
+  </div>
+  <span class="nav__ch" id="navCh">000 / {count}</span>
+</nav>
+
+<!-- HERO: giant mark docks into the nav -->
+<header class="hero" id="top">
+  <div class="hero__pin">
+    <div class="hero__mark" id="heroMark"><Mark id="heroSvg" w={2} h={1} /></div>
+    <div class="hero__copy" id="heroCopy">
+      <h1 class="display">Brands, websites, and the <span class="acc">systems</span> that run them.</h1>
+      <p><b>Jose Ortiz</b>Design Director, Mozart&amp;Co.<br />JRO Design · New York · Hermosillo</p>
+    </div>
+    <div class="hero__hint" id="heroHint">Scroll</div>
+  </div>
+</header>
+
+<!-- CHAPTERS -->
+{chapters.map((c) => (
+  <section class="ch" id={c.id} data-bg={c.bg} data-n={c.n}>
+    <div class="ch__pin">
+      <div class="ch__num">{c.n} / {count} · {c.label}</div>
+      <div class="ch__word display" data-word>{c.word}</div>
+      <div class="ch__stack">
+        {c.slugs.map((s) => { const p = bySlug[s]; return (
+          <div class="ch__img">{p.img ? <img src={p.img} alt="" loading="lazy" decoding="async" /> : <div class="tile">{p.tile}</div>}</div>
+        ); })}
+      </div>
+      <div class="ch__cap">
+        <div>
+          <h3>{c.slugs.map((s, i) => <>{i > 0 && ' · '}<a href={`/work/${s}/`}>{bySlug[s].t}</a></>)}</h3>
+          <p>{c.copy}</p>
+        </div>
+        <div class="mono">{c.meta[0]}<br />{c.meta[1]}</div>
+      </div>
+    </div>
+  </section>
+))}
+
+<!-- INDEX -->
+<section class="index" id="index" data-bg="bone">
+  <div class="index__head">
+    <h2 class="display" data-rv>All {words[projects.length] ?? projects.length}<span class="acc">.</span></h2>
+    <div class="filters" data-rv><button class="on" data-f="all">All</button><button data-f="mozart">Mozart&amp;Co.</button><button data-f="jro">JRO Design</button></div>
+  </div>
+  <div class="grid" id="grid">
+    {projects.map((p) => (
+      <a class="card" href={`/work/${p.slug}/`} data-slug={p.slug} data-g={p.g} data-rv>
+        <div class="card__m"><Media p={p} /></div>
+        <div class="card__t">{p.t}<span>{p.cat}</span></div>
+      </a>
+    ))}
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div data-rv>
+    <h2 class="display">Design director.<br />Builder by <span class="acc">habit</span>.</h2>
+    <p>I lead design at Mozart&amp;Co., a brand, web, and marketing agency for healthcare and real-estate operators, where a small team ships brand, web, and motion work for dozens of facilities at once.</p>
+    <p>Before that I spent three years in e-commerce UX at Selectblinds, and before that I started JRO Design, the independent practice I still run for a handful of clients from Hermosillo to New York.</p>
+  </div>
+  <div class="facts" data-rv>
+    <div><b>Based</b><span>Astoria, Queens · NYC</span></div>
+    <div><b>Roots</b><span>Hermosillo, Sonora</span></div>
+    <div><b>Languages</b><span>English · Español</span></div>
+    <div><b>Focus</b><span>Healthcare · Real estate · Retail</span></div>
+    <div><b>Now</b><span>Mozart&amp;Co. · 2024 →</span></div>
+    <div><b>Independent</b><span>JRO Design · 2019 →</span></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact" data-bg="accent">
+  <div class="contact__body">
+    <div class="mono" data-rv style="opacity:.7">Contact</div>
+    <h2 class="display" data-rv>Let’s build<br />something worth running.</h2>
+    <a class="contact__mail" id="mail" href={`mailto:${mail}`} data-mail={mail}><span class="copied">Copied ✓</span>{mail}</a>
+    <div class="contact__links" data-rv>
+      <a href="https://www.linkedin.com/in/jrortizdesign" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://www.instagram.com/jrortizdesign" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://mozartcompany.com" target="_blank" rel="noopener">Mozart&amp;Co.</a>
+    </div>
+  </div>
+  <div class="contact__row" id="row">{row.map(([w, h]) => <Mark w={w} h={h} />)}</div>
+  <div class="foot"><span>© {new Date().getFullYear()} Jose R. Ortiz · JRO Design · New York</span><span id="time">NYC —:—</span></div>
+</section>
+</main>
+
+<script>
+  import { initHome, destroyHome } from '../scripts/home.js';
+  document.addEventListener('astro:page-load', () => { if (document.getElementById('home')) initHome(); });
+  document.addEventListener('astro:before-swap', destroyHome);
+</script>
+</Base>

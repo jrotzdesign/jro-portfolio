@@ -1,0 +1,64 @@
+---
+import Base from '../../layouts/Base.astro';
+import Media from '../../components/Media.astro';
+import { projects } from '../../data/projects.js';
+
+export function getStaticPaths() {
+  return projects.map((p, i) => ({ params: { slug: p.slug }, props: { p, i } }));
+}
+const { p, i } = Astro.props;
+const n = projects.length;
+const prev = projects[(i - 1 + n) % n], next = projects[(i + 1) % n];
+const pad = (x) => String(x).padStart(2, '0');
+const credit = p.g === 'mozart' ? 'At Mozart&Co.' : 'JRO Design · independent';
+---
+<Base title={`${p.t} — Jose Ortiz`} description={p.intro} image={p.img ?? '/og.jpg'}>
+<main class="pp" id="work" data-slug={p.slug} data-prev={`/work/${prev.slug}/`} data-next={`/work/${next.slug}/`}>
+  <div class="pp__bar">
+    <div class="l"><a class="x" href="/#index">← Index</a><span id="ppN">{pad(i + 1)} / {pad(n)}</span></div>
+    <div class="l"><a href={`/work/${prev.slug}/`} rel="prev">Prev</a><a href={`/work/${next.slug}/`} rel="next">Next →</a></div>
+  </div>
+
+  <div class="pp__hero" id="ppHero"><Media p={p} loading="eager" /></div>
+
+  <div class="pp__head">
+    <h1 class="display" data-in>{p.t}</h1>
+    <div class="pp__meta" data-in>
+      <div><b>Client</b><span>{p.client}</span></div>
+      <div><b>Role</b><span>{p.role}</span></div>
+      <div><b>Year</b><span>{p.year}</span></div>
+      <div><b>Stack</b><span>{p.stack}</span></div>
+    </div>
+  </div>
+
+  <div class="pp__intro">
+    <p data-in>{p.intro}</p>
+    <ul class="pp__did" data-in>{p.did.map((d) => <li>{d}</li>)}</ul>
+  </div>
+
+  {p.gallery.length > 0 && (
+    <div class="pp__gal">
+      {p.gallery.map((g) => <figure class={g.wide ? 'wide' : ''} data-rv><img src={g.src} loading="lazy" decoding="async" alt="" /></figure>)}
+    </div>
+  )}
+
+  <div class="pp__out">
+    <h2 class="display" data-rv>{p.outcome}</h2>
+    <div data-rv>
+      <div class="mono" style="opacity:.55;margin-bottom:.6rem">{credit}</div>
+      {p.links.length > 0 && <div class="pp__links">{p.links.map(([label, url]) => <a href={url} target="_blank" rel="noopener">{label}</a>)}</div>}
+    </div>
+  </div>
+
+  <div class="pp__next">
+    <a href={`/work/${prev.slug}/`} class="p"><span class="mono">← Previous</span><b>{prev.t}</b></a>
+    <a href={`/work/${next.slug}/`} class="n"><span class="mono">Next →</span><b>{next.t}</b></a>
+  </div>
+</main>
+
+<script>
+  import { initWork, destroyWork } from '../../scripts/work.js';
+  document.addEventListener('astro:page-load', () => { if (document.getElementById('work')) initWork(); });
+  document.addEventListener('astro:before-swap', destroyWork);
+</script>
+</Base>
