@@ -3,6 +3,9 @@ import Base from '../layouts/Base.astro';
 import Mark from '../components/Mark.astro';
 import Media from '../components/Media.astro';
 import { projects, bySlug } from '../data/projects.js';
+import { makeJRO, staticMark } from '../lib/morph.js';
+import JRO from '../data/jro3.json';
+const hero = staticMark(makeJRO(JRO), 2, 1);
 
 const chapters = [
   { id: 'ch1', n: '001', bg: 'bone', label: 'Brand systems', word: 'Brand', slugs: ['towne', 'glades-west', 'carlton-shores'],
@@ -34,7 +37,14 @@ const mail = 'hello@jrortizdesign.com';
 <!-- HERO: giant mark docks into the nav -->
 <header class="hero" id="top">
   <div class="hero__pin">
-    <div class="hero__mark" id="heroMark"><Mark id="heroSvg" w={2} h={1} /></div>
+    <div class="hero__mark" id="heroMark">
+      <!-- the hero mark. #heroOpen carries the opening frames (blocks → carved letters, six half-pieces); the three
+           letter paths take over once the real mark is reached and morph/dock from there. -->
+      <svg id="heroSvg" viewBox={hero.viewBox} preserveAspectRatio="none" aria-hidden="true">
+        <g id="heroOpen" style="stroke-width:.8">{[0,1,2,3,4,5].map(() => <path />)}</g>
+        <g id="heroLetters">{hero.d.map((d) => <path d={d} fill-rule="evenodd" />)}</g>
+      </svg>
+    </div>
     <div class="hero__copy" id="heroCopy">
       <h1 class="display">Brands, websites, and the <span class="acc">systems</span> that run them.</h1>
       <p><b>Jose Ortiz</b>Design Director, Mozart&amp;Co.<br />JRO Design · New York · Hermosillo</p>
