@@ -80,8 +80,7 @@ body[data-bg="night"] .ch__cap p,body[data-bg="night"] .hero__copy p{color:rgba(
 .facts span{font-family:var(--display);font-weight:500;letter-spacing:-.02em;font-size:1.2rem}
 @media(max-width:800px){.about{grid-template-columns:1fr}}
 .contact{min-height:100svh;display:grid;grid-template-rows:1fr auto;position:relative;overflow:hidden;padding-top:14vh}
-.contact__body{padding-bottom:10vh}
-.contact__body{padding:0 var(--pad);position:relative;z-index:2}
+.contact__body{padding:0 var(--pad) 10vh;position:relative;z-index:2}
 .contact__body h2{font-size:clamp(3rem,10vw,10rem)}
 .contact__mail{display:inline-block;margin-top:2.5rem;font-family:var(--mono);font-size:clamp(1rem,2.2vw,1.6rem);border-bottom:1px solid currentColor;padding-bottom:.25rem;position:relative}
 .contact__mail .copied{position:absolute;left:0;top:-1.6rem;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;opacity:0;transition:opacity .3s,transform .4s var(--ease);transform:translateY(6px)}
