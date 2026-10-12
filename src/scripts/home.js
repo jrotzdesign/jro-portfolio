@@ -26,14 +26,14 @@ export function initHome() {
   }));
 
   /* hero — three acts, scrubbed over the hero's scroll range (storyboard, Oct 10):
-     A  0 → .167  three solid blocks are carved into the ultra-wide mark (a shrinking round stroke under per-letter clips)
-        .167 → .222 hold on the ultra-wide mark
-     B  .222 → .278 the mark un-stretches from full width to its real proportions (w=2, h=1); hold to .333
-     C  .333 → 1   the mark morphs toward the main mark (w=0, h=0), shrinks and docks into the nav slot */
+     A  0 → .30   three solid blocks are carved into the ultra-wide mark (storyboard keyframes, see hero-open.json)
+        .30 → .34  hold on the ultra-wide mark
+     B  .34 → .42  the mark un-stretches from full width to its real proportions (w=2, h=1); hold to .46
+     C  .46 → 1    the mark morphs toward the main mark (w=0, h=0), shrinks and docks into the nav slot */
   const nav = $('#nav'), navMark = $('#navMark'), slotEl = $('.nav__slot');
   const heroMark = $('#heroMark'), heroSvg = $('#heroSvg'), heroCopy = $('#heroCopy'), heroHint = $('#heroHint');
   const openG = $('#heroOpen'), lettersG = $('#heroLetters'), openPaths = $$('path', openG), letterPaths = $$('path', lettersG);
-  const PA = 0.167, PH = 0.222, PB = 0.278, PC = 0.333;
+  const PA = 0.30, PH = 0.34, PB = 0.42, PC = 0.46;
   const STRETCH = 1338.3 / 829.8;      // full-width opening vs the mark's own width (storyboard, 1440 viewport)
   M.apply(navMark, V(0, 0));
   let heroST = null;

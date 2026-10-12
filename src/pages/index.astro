@@ -20,7 +20,6 @@ const chapters = [
 ];
 const count = String(chapters.length).padStart(3, '0');
 const words = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'];
-const row = [[0,0],[1,0],[2,0],[0,1],[1,1],[2,1],[0,0],[1,0],[2,0],[0,1],[1,1],[2,1]];
 const mail = 'jrotz.design@gmail.com';
 ---
 <Base>
@@ -120,7 +119,6 @@ const mail = 'jrotz.design@gmail.com';
       <a href="https://mozartcompany.com" target="_blank" rel="noopener">Mozart&amp;Co.</a>
     </div>
   </div>
-  <div class="contact__row" id="row">{row.map(([w, h]) => <Mark w={w} h={h} />)}</div>
   <div class="foot"><span>© {new Date().getFullYear()} Jose R. Ortiz · JRO Design · New York</span><span id="time">NYC —:—</span></div>
 </section>
 </main>
