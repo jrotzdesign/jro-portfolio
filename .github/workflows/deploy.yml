@@ -16,7 +16,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - run: npm ci
@@ -27,4 +27,5 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: 5017f0d78a38195a445b1619c32d4f86
+          wranglerVersion: '4.149.0'
           command: pages deploy dist --project-name jro-portfolio --branch main
