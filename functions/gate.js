@@ -40,8 +40,6 @@ body{background:var(--bone);color:var(--ink);font-family:var(--body);-webkit-fon
 .mark svg{height:100%;width:auto;max-width:100%;fill:var(--ink);overflow:visible;transition:fill .3s}
 .mark.no svg{fill:var(--rosa)}
 .mark.yes svg{fill:var(--accent)}
-.mark.shake{animation:shake .5s cubic-bezier(.36,.07,.19,.97)}
-@keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-8px)}40%,60%{transform:translateX(8px)}}
 form{display:flex;align-items:flex-end;gap:1rem;width:min(100%,34rem)}
 .field{flex:1;position:relative}
 input{width:100%;font:500 clamp(1.4rem,3.2vw,2.2rem)/1.2 var(--display);letter-spacing:-.02em;color:var(--ink);background:none;border:0;border-bottom:1px solid var(--ink);padding:.3rem 0;outline:0;border-radius:0;font-variation-settings:"opsz" 96}
@@ -53,47 +51,43 @@ button.go:hover{background:var(--accent);border-color:var(--accent);color:#0b151
 .hint.no{color:var(--rosa)}.hint.yes{color:var(--accent)}
 .foot{display:flex;justify-content:space-between;padding:1.4rem var(--pad);border-top:1px solid var(--line)}
 @media(max-width:700px){.mark{width:80vw;height:34vh}.foot{flex-direction:column;gap:.4rem}}
-@media(prefers-reduced-motion:reduce){.gate{transition:none}.mark.shake{animation:none}}
+@media(prefers-reduced-motion:reduce){.gate{transition:none}}
 `;
 
 const JS = `
 const JRO=__JRO__; const M=(${ENGINE})(JRO);
 const $=s=>document.querySelector(s); const svg=$('#mark svg'), mark=$('#mark'), input=$('#word'), hint=$('#hint'), form=$('#f'), gate=$('#gate');
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-// three letters, each a spring toward its target weight/height
-const L=[0,1,2].map(()=>({w:.4,h:.2,vw:0,vh:0,tw:.4,th:.2}));
-let idle=true, t0=performance.now(), done=false;
-function base(len){ const p=Math.min(1,len/12); return {w:.4+1.6*p, h:.2+.8*p}; }
-function setTargets(len){ const b=base(len); L.forEach((l,i)=>{ l.tw=b.w; l.th=b.h; }); }
-function pulse(i,dw,dh){ L[i].vw+=dw; L[i].vh+=dh; }
+// Three letters ease toward a shared target; each one lags a little more than the last, so the mark swells
+// as one continuous wave rather than reacting letter by letter. No velocity, no kicks.
+const RATE=[.075,.058,.045];
+const L=[0,1,2].map(()=>({w:.4,h:.2}));
+let target={w:.4,h:.2}, mood='idle', t0=performance.now(), done=false;
+const base=len=>{ const p=Math.min(1,len/12); const e=1-Math.pow(1-p,2); return {w:.4+1.6*e, h:.2+.8*e}; };
 function tick(now){
   const t=(now-t0)/1000;
   L.forEach((l,i)=>{
-    let tw=l.tw, th=l.th;
-    if(idle){ tw+=Math.sin(t*1.1+i*2.1)*.12; th+=Math.sin(t*.8+i*1.7)*.05; }
-    l.vw+=(tw-l.w)*.12; l.vw*=.78; l.w+=l.vw;
-    l.vh+=(th-l.h)*.12; l.vh*=.78; l.h+=l.vh;
+    let tw=target.w, th=target.h;
+    if(mood==='idle'){ tw+=Math.sin(t*.6+i*.9)*.08; th+=Math.sin(t*.45+i*.7)*.03; }   // slow breath
+    l.w+=(tw-l.w)*RATE[i]; l.h+=(th-l.h)*RATE[i];
   });
   M.apply(svg,L.map(l=>({w:Math.max(0,Math.min(2,l.w)),h:Math.max(0,Math.min(1,l.h))})));
   if(!done) requestAnimationFrame(tick);
 }
 if(!reduce) requestAnimationFrame(tick); else M.apply(svg,[{w:1,h:.5},{w:1,h:.5},{w:1,h:.5}]);
-input.addEventListener('input',()=>{ idle=false; const n=input.value.length; setTargets(n); if(n) pulse((n-1)%3,.6,.3); mark.className='mark'; hint.className='mono hint'; hint.textContent=n?'':'Type the word, press enter.'; if(!n){ idle=true; } });
-input.addEventListener('focus',()=>{ idle=false; setTargets(input.value.length); });
-input.addEventListener('blur',()=>{ if(!input.value) idle=true; });
+function retarget(){ const n=input.value.length; target=n?base(n):{w:.4,h:.2}; mood=n?'typing':'idle'; }
+input.addEventListener('input',()=>{ retarget(); mark.className='mark'; hint.className='mono hint'; hint.textContent=input.value?'':'Type the word, press enter.'; });
 let tries=0; const nopes=['Not it.','Still not it.','Ask Jose for the word.'];
 form.addEventListener('submit',async e=>{
   e.preventDefault(); const word=input.value.trim(); if(!word||done) return;
   const r=await fetch('/__gate',{method:'POST',body:new FormData(form)}).catch(()=>null);
   if(r&&r.ok){
-    done=false; mark.className='mark yes'; hint.className='mono hint yes'; hint.textContent='Welcome in.';
-    L.forEach(l=>{ l.tw=2; l.th=1; }); [0,1,2].forEach(i=>setTimeout(()=>pulse(i,.9,.5),i*90));
-    setTimeout(()=>{ gate.classList.add('open'); },650);
-    setTimeout(()=>{ done=true; location.reload(); },1500);
+    mood='yes'; target={w:2,h:1}; mark.className='mark yes'; hint.className='mono hint yes'; hint.textContent='Welcome in.';
+    setTimeout(()=>gate.classList.add('open'),700);
+    setTimeout(()=>{ done=true; location.reload(); },1600);
   } else {
-    tries++; mark.className='mark no shake'; hint.className='mono hint no'; hint.textContent=nopes[Math.min(tries-1,2)];
-    L.forEach((l,i)=>{ l.tw=0; l.th=1; }); setTimeout(()=>{ input.value=''; setTargets(0); idle=true; mark.classList.remove('shake'); },600);
-    input.focus();
+    tries++; mood='no'; target={w:0,h:0}; mark.className='mark no'; hint.className='mono hint no'; hint.textContent=nopes[Math.min(tries-1,2)];
+    setTimeout(()=>{ input.value=''; retarget(); mark.className='mark'; input.focus(); },900);
   }
 });
 const time=$('#time'); const clock=()=>time.textContent='NYC '+new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date()); clock(); setInterval(clock,15000);
