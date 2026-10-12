@@ -38,14 +38,32 @@ export function initHome() {
   M.apply(navMark, V(0, 0));
   let heroST = null;
   const bigW = () => Math.min(innerWidth * 0.82, innerHeight * 0.78 * (448 / 379));
-  // opening frames: four keyframes per half-letter, linear in scroll between them
+  // opening frames (storyboard): each block is its rectangle minus the real letter's negative spaces, and those
+  // spaces grow from nothing into their final shape — so every in-between frame is still clean geometry.
+  // Windows are fractions of act A; each region scales about its anchor along the axis that reads as "carving".
+  const WIN = { corner: [0, .35], top: [.08, .55], notch: [.25, .65], slit: [.30, .75], gap: [.45, .85], leg: [.55, .95] };
+  const AXIS = { corner: 'xy', top: 'y', notch: 'x', slit: 'x', gap: 'x', leg: 'x' };
+  const smooth = (t) => (t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t));
+  const f1 = (v) => v.toFixed(1);
+  function regionPath(r, a) {
+    const [t0, t1] = WIN[r.t], k = smooth((a - t0) / (t1 - t0));
+    if (k <= 0) return '';
+    const sx = AXIS[r.t] === 'y' ? 1 : k, sy = AXIS[r.t] === 'x' ? 1 : k, [ax, ay] = r.a;
+    let d = '';
+    for (let i = 0; i < r.pts.length; i++) {
+      const [x, y] = r.pts[i];
+      d += (i ? 'L' : 'M') + f1(ax + (x - ax) * sx) + ' ' + f1(ay + (y - ay) * sy);
+    }
+    return d + 'Z';
+  }
   function paintOpen(a) {
-    const seg = Math.min(2, Math.floor(a * 3)), u = a * 3 - seg; let k = 0;
-    OPEN.letters.forEach((pieces) => pieces.forEach((piece) => {
-      const A = piece[seg], B = piece[seg + 1]; let d = '';
-      for (let i = 0; i < A.length; i++) d += (i ? 'L' : 'M') + (A[i][0] + (B[i][0] - A[i][0]) * u).toFixed(1) + ' ' + (A[i][1] + (B[i][1] - A[i][1]) * u).toFixed(1);
-      openPaths[k++].setAttribute('d', d + 'Z');
-    }));
+    OPEN.letters.forEach((L, i) => {
+      const [x0, x1, y0, y1] = L.rect;
+      let d = `M${x0} ${y0}L${x1} ${y0}L${x1} ${y1}L${x0} ${y1}Z`;
+      L.neg.forEach((r) => { d += regionPath(r, a); });
+      L.pos.forEach((r) => { d += regionPath(r, a); });
+      openPaths[i].setAttribute('d', d);
+    });
   }
   function showOpen(on) { openG.style.display = on ? '' : 'none'; lettersG.style.display = on ? 'none' : ''; }
   function paintHero(p) {

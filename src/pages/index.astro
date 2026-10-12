@@ -37,10 +37,10 @@ const mail = 'jrotz.design@gmail.com';
 <header class="hero" id="top">
   <div class="hero__pin">
     <div class="hero__mark" id="heroMark">
-      <!-- the hero mark. #heroOpen carries the opening frames (blocks → carved letters, six half-pieces); the three
+      <!-- the hero mark. #heroOpen carries the opening frames (blocks carved into letters, one path per letter); the three
            letter paths take over once the real mark is reached and morph/dock from there. -->
       <svg id="heroSvg" viewBox={hero.viewBox} preserveAspectRatio="none" aria-hidden="true">
-        <g id="heroOpen" style="stroke-width:.8">{[0,1,2,3,4,5].map(() => <path />)}</g>
+        <g id="heroOpen">{[0,1,2].map(() => <path fill-rule="evenodd" />)}</g>
         <g id="heroLetters">{hero.d.map((d) => <path d={d} fill-rule="evenodd" />)}</g>
       </svg>
     </div>
