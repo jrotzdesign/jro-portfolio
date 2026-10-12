@@ -16,6 +16,17 @@ async function hmac(secret, msg) {
 const token = (secret) => hmac(secret, 'jro-gate-v1');
 const safeEqual = (a, b) => a.length === b.length && [...a].every((c, i) => c === b[i]);
 
+// Unlocked responses must never land in Cloudflare's shared edge cache (a cached image would be served to anyone),
+// so public, immutable becomes private, immutable: browsers still keep assets for a year, the CDN stops sharing them.
+function privatize(res) {
+  const out = new Response(res.body, res);
+  const cc = out.headers.get('Cache-Control') || '';
+  out.headers.set('Cache-Control', cc ? cc.replace(/\bpublic\b/, 'private') : 'private, no-cache');
+  if (!/\bprivate\b/.test(out.headers.get('Cache-Control'))) out.headers.set('Cache-Control', 'private, ' + out.headers.get('Cache-Control'));
+  out.headers.set('Vary', 'Cookie');
+  return out;
+}
+
 export async function onRequest({ request, env, next }) {
   const password = env.SITE_PASSWORD;
   if (!password) return next();                                    // gate off
@@ -42,7 +53,7 @@ export async function onRequest({ request, env, next }) {
     return new Response(null, { status: 302, headers: { Location: '/', 'Set-Cookie': `${COOKIE}=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax` } });
   }
 
-  if (authed) return next();
+  if (authed) return privatize(await next());
   if (url.pathname === '/favicon.svg') return next();
   return new Response(gatePage(), { status: 401, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' } });
 }
