@@ -24,6 +24,7 @@ function privatize(res) {
   out.headers.set('Cache-Control', cc ? cc.replace(/\bpublic\b/, 'private') : 'private, no-cache');
   if (!/\bprivate\b/.test(out.headers.get('Cache-Control'))) out.headers.set('Cache-Control', 'private, ' + out.headers.get('Cache-Control'));
   out.headers.set('Vary', 'Cookie');
+  out.headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
   return out;
 }
 
@@ -54,6 +55,6 @@ export async function onRequest({ request, env, next }) {
   }
 
   if (authed) return privatize(await next());
-  if (url.pathname === '/favicon.svg') return next();
-  return new Response(gatePage(), { status: 401, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' } });
+  if (url.pathname === '/favicon.svg' || url.pathname === '/robots.txt') return next();
+  return new Response(gatePage(), { status: 401, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow, noarchive' } });
 }
