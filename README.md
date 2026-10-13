@@ -32,3 +32,7 @@ Cloudflare Pages, Git integration: build command `npm run build`, output directo
 ## Password gate
 
 `functions/_middleware.js` runs on Cloudflare Pages in front of every request. If the `SITE_PASSWORD` secret is set on the Pages project, visitors without the signed cookie get the gate page (`functions/gate.js`) instead of the site; the right word sets a 30-day HttpOnly cookie. Set or change the word with `npx wrangler pages secret put SITE_PASSWORD --project-name jro-portfolio`; delete the secret to open the site to everyone. For local testing put `SITE_PASSWORD=…` in `.dev.vars` (git-ignored) and run `npx wrangler pages dev dist`. Visiting `/__gate/leave` clears the cookie.
+
+## In motion (project pages)
+
+A project with a `motion` array in `src/data/projects.js` gets an "In motion" strip between the intro and the gallery. Items are `{t:'lottie', src:'/motion/x.json', name, bg?}` (Lottie JSON, played with lottie-web's light build) or `{t:'video', src:'/motion/x.mp4', name}` (muted, looping). Pieces load when they near the viewport, play once when at least half visible, and replay on click; `bg` colours the card behind transparent Lottie files. Files live in `public/motion/`.

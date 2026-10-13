@@ -36,6 +36,23 @@ const credit = p.g === 'mozart' ? 'At Mozart&Co.' : 'JRO Design · independent';
     <ul class="pp__did" data-in>{p.did.map((d) => <li>{d}</li>)}</ul>
   </div>
 
+  {p.motion && p.motion.length > 0 && (
+    <section class="pp__motion" aria-label="In motion">
+      <div class="pp__motion-head">
+        <h2 class="display">In motion</h2>
+        <div class="mono">{p.motion.length} {p.motion.length === 1 ? 'piece' : 'pieces'} · plays as you scroll · click to replay</div>
+      </div>
+      <div class={`pp__mgrid n${Math.min(p.motion.length, 3)}`}>
+        {p.motion.map((m) => (
+          <figure class="mo" data-type={m.t} data-src={m.src} style={m.bg ? `--mo-bg:${m.bg}` : undefined}>
+            <div class="mo__stage">{m.t === 'video' && <video src={m.src} muted loop playsinline preload="none" />}</div>
+            <figcaption class="mono"><span>{m.name}</span><button type="button" class="mo__replay" aria-label={`Replay ${m.name}`}>↻</button></figcaption>
+          </figure>
+        ))}
+      </div>
+    </section>
+  )}
+
   {p.gallery.length > 0 && (
     <div class="pp__gal">
       {p.gallery.map((g) => <figure class={g.wide ? 'wide' : ''} data-rv><img src={g.src} loading="lazy" decoding="async" alt="" /></figure>)}

@@ -1,6 +1,7 @@
 // Project index. Order = order on the site. `g` groups the index filter (mozart | jro).
 // `img` is the card / hero image (public/img). `tile` + `bg` render a typographic tile when there is no image yet.
 // Gallery items: {src, wide?}. Mozart case-study imagery lives in public/img/gallery (downloaded from the case studies).
+// Motion items: {t:'lottie'|'video', src, name, bg?} — Lottie JSON or an mp4/webm in public/motion, shown in the page's In-motion strip.
 export const projects=[
     {slug:'mozart',t:'Mozart&Co. website',cat:'Agency',g:'mozart',img:'/img/mozart-site.webp',href:'https://mozartcompany.com',client:'Mozart&Co.',role:'Design Director · design & build',year:'2026',stack:'Astro · Cloudflare Pages · GSAP · Lenis',
       intro:'The agency’s own site, designed and built in-house. A system of paper and ink, one serif, one sans, and a motion language that stays out of the way of the work.',
@@ -10,11 +11,25 @@ export const projects=[
     {slug:'prestige',t:'Prestige Healthcare',cat:'22 sites',g:'mozart',img:'/img/prestige-thumb.webp',href:'https://mozartcompany.com/work/prestige',client:'Prestige Healthcare Administrative Services',role:'Design Director · web system & ops',year:'2024 — 26',stack:'Webflow · CMS · Mapbox',
       intro:'A network of skilled-nursing facilities across the East Coast, each with its own front door, running on one identity and one Webflow template system. Twenty-two sites today, built to scale into more.',
       did:['Facility template system on Webflow','Per-site CMS: teams, services, galleries','Corporate hub with state filtering','QA, content and launch for the Virginia five','Ongoing operations: forms, staff changes, campaigns'],
+      motion:[
+        {t:'lottie',src:'/motion/shore-acres.json',name:'Shore Acres',bg:'#1c2733'},
+        {t:'lottie',src:'/motion/gulf-shores.json',name:'Gulf Shores',bg:'#b2645c'},
+        {t:'lottie',src:'/motion/lake-gibson.json',name:'The Club at Lake Gibson',bg:'#a9c8d4'},
+        {t:'lottie',src:'/motion/ardelle-gardens.json',name:'Ardelle Gardens',bg:'#1f3340'},
+        {t:'lottie',src:'/motion/madison-pointe.json',name:'Madison Pointe'},
+        {t:'lottie',src:'/motion/bayside.json',name:'Bayside'},
+        {t:'lottie',src:'/motion/advanced.json',name:'Advanced Care',bg:'#ffffff'},
+        {t:'lottie',src:'/motion/excel.json',name:'Excel'},
+        {t:'lottie',src:'/motion/lexington.json',name:'Lexington'},
+      ],
       gallery:[{src:'/img/gallery/prestige--hero-stage.webp',wide:true},{src:'/img/gallery/prestige--gallery-02.webp'},{src:'/img/gallery/prestige--gallery-05.webp'},{src:'/img/gallery/prestige--gallery-07.webp'}],
       outcome:'One template, cloned and tuned per facility, so a new site launches in days rather than months — and a change to the system rolls out across all twenty-two.',links:[['Full case study ↗','https://mozartcompany.com/work/prestige']]},
     {slug:'lionstone',t:'Lionstone Healthcare',cat:'35 sites',g:'mozart',img:'/img/lionstone-grid-thumb.webp',href:'#',client:'Lionstone Healthcare',role:'Design Director · web system & ops',year:'2025 — 26',stack:'Webflow · Mapbox GL · Apploi / Paycom embeds',
       intro:'Thirty-five facility websites across Ohio and New Jersey on one design system, launched on a single calendar — with a custom interactive facilities map and careers embeds restyled to each brand.',
       did:['Thirty-five sites on one Webflow system','Interactive Mapbox network map — geocoding, radius filter, three-state pins','Careers widgets restyled per brand','Staging-first rollout across the network','Memory-care, benefits and footer rollouts across 30+ sites'],
+      motion:[
+        {t:'lottie',src:'/motion/woodbridge.json',name:'Woodbridge',bg:'#8ea0b4'},
+      ],
       gallery:[{src:'/img/gallery/lionstone--poster.webp',wide:true},{src:'/img/gallery/lionstone--map.webp'},{src:'/img/gallery/lionstone--print-cover.webp'},{src:'/img/gallery/lionstone--social-grid-1.webp'}],
       outcome:'Every facility keeps its own community character while running on the same digital and print system.',links:[['Full case study ↗','https://mozartcompany.com/work/lionstone']]},
     {slug:'towne',t:'Towne Group',cat:'Brand',g:'mozart',img:'/img/towne-thumb.webp',href:'https://mozartcompany.com/work/towne',client:'Towne Group',role:'Design Director · identity & print',year:'2025',stack:'Illustrator · InDesign · Figma',
