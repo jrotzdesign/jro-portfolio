@@ -142,6 +142,46 @@ body[data-bg="night"] .ch__cap p,body[data-bg="night"] .hero__copy p{color:rgba(
 .pp__next a.n{text-align:right;align-items:flex-end}
 @media(max-width:800px){.pp__head,.pp__intro,.pp__out{grid-template-columns:1fr}.pp__gal{grid-template-columns:1fr}.pp__gal figure.wide{grid-column:auto;aspect-ratio:4/3}.pp__next{flex-direction:column;align-items:stretch}.pp__next a.n{align-items:flex-start;text-align:left}.pp__hero{aspect-ratio:4/3}}
 
+/* ═══ phones (≤700px) — one pass over every section ═══ */
+@media(max-width:700px){
+  /* nav: keep Index + Contact reachable; the chapter words only exist to be scrolled to */
+  .nav__c{display:flex;gap:1.1rem}.nav__c a.t:not(:nth-last-child(-n+2)){display:none}
+  .nav{padding:1rem var(--pad);height:56px}.nav__slot{height:26px;width:52px}
+  /* hero copy sits lower-left, one column */
+  .hero__copy{gap:1.2rem}.hero__copy h1{font-size:clamp(2.1rem,9.5vw,3rem)}.hero__copy p{line-height:1.8}
+  /* chapters: one taller frame, caption stacked */
+  .hero{height:280svh}.ch{height:220svh}.ch__num{top:4.6rem}
+  .ch__img{width:88vw;aspect-ratio:4/3;top:43%;border-radius:5px;box-shadow:0 24px 60px rgba(0,0,0,.22)}
+  .ch__img .tile{font-size:2.2rem}
+  .ch__cap h3{font-size:clamp(1.35rem,6.5vw,1.8rem)}.ch__cap p{font-size:.9rem;max-width:none}
+  /* index: heading and filters stack; cards keep two columns but the title and tag stack */
+  .index{padding:12vh var(--pad) 8vh}
+  .index__head{flex-direction:column;align-items:flex-start;gap:1.2rem;margin-bottom:1.8rem}
+  .filters{gap:1.4rem}.filters button{white-space:nowrap}
+  .grid{gap:1.4rem .9rem}
+  .card__t{flex-direction:column;gap:.15rem;font-size:1rem}.card__t span{padding-top:0}
+  /* about + contact */
+  .about{padding:8vh var(--pad);gap:2.4rem}.facts{gap:1.1rem 1.2rem}.facts span{font-size:1.1rem}
+  .contact{padding-top:11vh}.contact__body{padding-bottom:8vh}.contact__body h2{font-size:clamp(2.6rem,12.5vw,4rem)}
+  .contact__mail{margin-top:1.8rem;font-size:1rem;word-break:break-all}
+  .foot{flex-direction:column;gap:.3rem;padding:1.1rem var(--pad) 1.3rem}
+  /* project pages */
+  .pp__bar{height:56px}.pp__bar .l{gap:1rem}.pp__bar .x{padding:.4rem .7rem}
+  .pp__head{padding-top:1.6rem;gap:1.4rem}.pp__head h1{font-size:clamp(2.4rem,11vw,3.4rem)}
+  .pp__intro{padding-top:2rem;gap:1.6rem}.pp__intro p{max-width:none}
+  .pp__did{line-height:2}
+  .pp__motion{padding-top:2.6rem}
+  /* three or more pieces become a swipe strip instead of a tall stack; each card plays as it snaps into view */
+  .pp__mgrid.n3{display:flex;gap:.8rem;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 var(--pad);margin:0 calc(-1 * var(--pad));scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .pp__mgrid.n3::-webkit-scrollbar{display:none}
+  .pp__mgrid.n3 .mo{flex:0 0 78vw;scroll-snap-align:center}
+  .pp__mgrid.n3::after{content:"";flex:0 0 calc(var(--pad) - .8rem)}
+  .mo figcaption{opacity:1;transform:none}
+  .pp__gal{padding-top:2rem;gap:.9rem}
+  .pp__out{padding-top:2.4rem;gap:1.4rem}
+  .pp__next{margin-top:3rem;padding:1.6rem 0 3rem;gap:1.4rem}
+}
+
 /* view transitions: the card image becomes the page hero */
 ::view-transition-old(root),::view-transition-new(root){animation-duration:.45s}
 @media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}

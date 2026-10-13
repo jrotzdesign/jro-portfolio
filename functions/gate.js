@@ -50,7 +50,7 @@ button.go:hover{background:var(--accent);border-color:var(--accent);color:#0b151
 .hint{min-height:1.4em;color:var(--ink-2);transition:color .3s}
 .hint.no{color:var(--rosa)}.hint.yes{color:var(--accent)}
 .foot{display:flex;justify-content:space-between;padding:1.4rem var(--pad);border-top:1px solid var(--line)}
-@media(max-width:700px){.mark{width:80vw;height:34vh}.foot{flex-direction:column;gap:.4rem}}
+@media(max-width:700px){.mark{width:80vw;height:34vh;flex:0 1 auto;min-height:0}.stage{min-height:0;gap:1.2rem}.foot{flex-direction:column;gap:.4rem}.gate.kb .foot{display:none}}
 @media(prefers-reduced-motion:reduce){.gate{transition:none}}
 `;
 
@@ -58,6 +58,8 @@ const JS = `
 const JRO=__JRO__; const M=(${ENGINE})(JRO);
 const $=s=>document.querySelector(s); const svg=$('#mark svg'), mark=$('#mark'), input=$('#word'), hint=$('#hint'), form=$('#f'), gate=$('#gate');
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+/* phones: when the keyboard opens, fit the gate to what is actually visible so the mark shrinks and the field stays on screen */
+if(window.visualViewport){const vv=visualViewport;const fit=()=>{const kb=innerHeight-vv.height>120;gate.classList.toggle('kb',kb);gate.style.height=kb?vv.height+'px':'';gate.style.top=kb?vv.offsetTop+'px':''};vv.addEventListener('resize',fit);vv.addEventListener('scroll',fit);}
 // Three letters ease toward a shared target; each one lags a little more than the last, so the mark swells
 // as one continuous wave rather than reacting letter by letter. No velocity, no kicks.
 const RATE=[.075,.058,.045];
@@ -116,7 +118,7 @@ export function gatePage() {
   <main class="stage">
     <div class="mark" id="mark"><svg viewBox="0 0 ${first.width.toFixed(1)} ${first.height.toFixed(1)}" aria-hidden="true">${first.d.map((d) => `<path d="${d}" fill-rule="evenodd"/>`).join('')}</svg></div>
     <form id="f" autocomplete="off">
-      <div class="field"><input id="word" name="word" type="password" placeholder="the magic word" autocapitalize="off" autocorrect="off" spellcheck="false" autofocus aria-label="Password"></div>
+      <div class="field"><input id="word" name="word" type="password" placeholder="the magic word" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" autofocus aria-label="Password"></div>
       <button class="go" type="submit" aria-label="Enter">→</button>
     </form>
     <div class="mono hint" id="hint">Type the word, press enter.</div>

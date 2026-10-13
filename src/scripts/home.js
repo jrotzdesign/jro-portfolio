@@ -38,6 +38,10 @@ export function initHome() {
   M.apply(navMark, V(0, 0));
   let heroST = null;
   const bigW = () => Math.min(innerWidth * 0.82, innerHeight * 0.78 * (448 / 379));
+  // on narrow screens the mark is width-bound, so the storyboard's 1.61× stretch would run off both edges:
+  // cap the opening at the viewport minus the page gutter (edge to gutter on a phone, unchanged on desktop)
+  const gutter = () => (innerWidth < 700 ? Math.min(Math.max(20, innerWidth * 0.04), 56) : 0);   // mirrors --pad
+  const stretch = () => Math.min(STRETCH, (innerWidth - 2 * gutter()) / bigW());
   // opening frames (storyboard): each block is its rectangle minus the real letter's negative spaces, and those
   // spaces grow from nothing into their final shape — so every in-between frame is still clean geometry.
   // Windows are fractions of act A; each region scales about its anchor along the axis that reads as "carving".
@@ -72,7 +76,8 @@ export function initHome() {
       const a = Math.min(1, p / PA);                                             // act A progress
       if (a < 1) { paintOpen(a); showOpen(true); } else { M.apply(heroSvg, V(2, 1), letterPaths); showOpen(false); }
       heroSvg.setAttribute('viewBox', '0 0 448 379');
-      const sx = p < PH ? STRETCH : p < PB ? STRETCH + (1 - STRETCH) * ease((p - PH) / (PB - PH)) : 1;
+      const S = stretch();
+      const sx = p < PH ? S : p < PB ? S + (1 - S) * ease((p - PH) / (PB - PH)) : 1;
       const w = bigW() * sx, h = bigW() * (379 / 448);
       heroMark.style.width = w + 'px'; heroMark.style.height = h + 'px';
       heroMark.style.left = W / 2 + 'px'; heroMark.style.top = H / 2 + 'px';
@@ -108,9 +113,11 @@ export function initHome() {
     const label = () => (navCh.textContent = `${ch.dataset.n} / ${String(total).padStart(3, '0')}`);
     if (noMotion) { imgs.forEach((im) => (im.style.transform = 'translate(-50%,-50%) scale(1)')); cap.style.opacity = 1; return; }
     const tl = gsap.timeline({ scrollTrigger: { trigger: ch, start: 'top top', end: 'bottom bottom', scrub: 0.4, onEnter: label, onEnterBack: label } });
+    // on a phone the frames are 88vw wide, so the side images fan further out (mostly off-screen) and smaller
+    const fan = mobile ? innerWidth * 0.5 : innerWidth * 0.28, side = mobile ? 0.55 : 0.7;
     tl.from(letters, { yPercent: 120, opacity: 0, stagger: 0.04, duration: 0.6, ease: 'power3.out' }, 0)
-      .to(imgs[1], { scale: 0.7, rotate: -8, x: -innerWidth * 0.28, duration: 1, ease: 'power2.inOut' }, 0.5)
-      .to(imgs[2], { scale: 0.7, rotate: 8, x: innerWidth * 0.28, duration: 1, ease: 'power2.inOut' }, 0.5)
+      .to(imgs[1], { scale: side, rotate: -8, x: -fan, duration: 1, ease: 'power2.inOut' }, 0.5)
+      .to(imgs[2], { scale: side, rotate: 8, x: fan, duration: 1, ease: 'power2.inOut' }, 0.5)
       .to(imgs[0], { scale: 1, duration: 1.2, ease: 'power2.inOut' }, 0.5)
       .to(letters, { yPercent: -60, opacity: 0, stagger: 0.02, duration: 0.6, ease: 'power2.in' }, 0.7)
       .to(imgs[0], { scale: mobile ? 1 : 1.08, duration: 0.6, ease: 'none' }, 1.7)

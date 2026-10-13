@@ -40,7 +40,7 @@ const credit = p.g === 'mozart' ? 'At Mozart&Co.' : 'JRO Design · independent';
     <section class="pp__motion" aria-label="In motion">
       <div class="pp__motion-head">
         <h2 class="display">In motion</h2>
-        <div class="mono">{p.motion.length} {p.motion.length === 1 ? 'piece' : 'pieces'} · plays as you scroll · click to replay</div>
+        <div class="mono">{p.motion.length} {p.motion.length === 1 ? 'piece' : 'pieces'} · plays in view · tap or click to replay</div>
       </div>
       <div class={`pp__mgrid n${Math.min(p.motion.length, 3)}`}>
         {p.motion.map((m) => (

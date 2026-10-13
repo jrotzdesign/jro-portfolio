@@ -5,6 +5,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 
 gsap.registerPlugin(ScrollTrigger);
+// iOS fires resize as the address bar collapses and grows; refreshing every pinned section on each one
+// makes the scroll stutter, so only real orientation / size changes refresh.
+ScrollTrigger.config({ ignoreMobileResize: true });
 
 export const reduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 export { gsap, ScrollTrigger };
