@@ -41,8 +41,8 @@ export function initHome() {
   // opening frames (storyboard): each block is its rectangle minus the real letter's negative spaces, and those
   // spaces grow from nothing into their final shape — so every in-between frame is still clean geometry.
   // Windows are fractions of act A; each region scales about its anchor along the axis that reads as "carving".
-  const WIN = { corner: [0, .35], top: [.08, .55], notch: [.25, .65], slit: [.30, .75], gap: [.45, .85], leg: [.55, .95] };
-  const AXIS = { corner: 'xy', top: 'y', notch: 'x', slit: 'x', gap: 'x', leg: 'x' };
+  const WIN = { corner: [0, .35], top: [.08, .55], notch: [.25, .65], slit: [.30, .75], gap: [.45, .85], crotch: [.40, .85], leg: [.55, .95] };
+  const AXIS = { corner: 'xy', top: 'y', notch: 'x', slit: 'x', gap: 'x', crotch: 'y', leg: 'x' };
   const smooth = (t) => (t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t));
   const f1 = (v) => v.toFixed(1);
   function regionPath(r, a) {
