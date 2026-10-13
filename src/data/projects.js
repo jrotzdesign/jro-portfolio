@@ -85,6 +85,7 @@ export const projects=[
     {slug:'mon-amie',t:'Mon Amie',cat:'JRO · 2026',g:'jro',img:'/img/mon-amie.webp',href:'#',client:'Mon Amie · Hermosillo, Sonora',role:'JRO Design · brand & Shopify',year:'2026',stack:'Shopify · Shopify POS · GSAP',
       intro:'A women’s clothing boutique in Hermosillo, online for the first time. Spanish-first with an English toggle, synced to the physical store through Shopify POS.',
       did:['Design system — Archivo + Italiana, near-white base, bugambilia accent','Oval logo silhouette as a CSS mask','GSAP intro animation','Shopify build with POS sync','ES / EN toggle'],
+      motion:[{t:'video',src:'/motion/mon-amie-intro.mp4',name:'Landing intro'}],
       gallery:[{src:'/img/gallery/mon-amie--01.webp',wide:true}],
       outcome:'Online for the first time, synced to the shop floor.',links:[]},
     {slug:'selectblinds',t:'Selectblinds Checkout',cat:'UX · 2022',g:'jro',tile:'Checkout, rebuilt.',img:null /* TODO: /img/selectblinds.webp */,href:'#',client:'Selectblinds.com',role:'UI/UX Designer',year:'2022',stack:'Figma · Research · A/B testing',
@@ -95,6 +96,7 @@ export const projects=[
     {slug:'ipx',t:'Indoor Pickleball X',cat:'JRO · 2026',g:'jro',img:'/img/ipx.webp',href:'#',client:'Indoor Pickleball X',role:'JRO Design · concept & motion',year:'2026',stack:'HTML prototype · After Effects',
       intro:'An unsolicited redesign of a multi-location indoor pickleball club’s site — much simpler, far less text, brand purple and lime kept — plus a logo intro in After Effects.',
       did:['Home, Clubs and About as a clickable prototype','Logo intro animation','Simplified content model'],
+      motion:[{t:'lottie',src:'/motion/ipx-intro.json',name:'Logo intro',bg:'#22254d'}],
       gallery:[{src:'/img/gallery/ipx--01.webp',wide:true}],
       outcome:'Concept — pitched under JRO Design.',links:[]},
   ];
