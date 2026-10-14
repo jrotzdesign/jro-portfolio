@@ -20,6 +20,7 @@ svg path{fill-rule:evenodd}
 .nav__slot svg{height:100%;width:auto;fill:currentColor;opacity:0;transition:opacity .3s}
 .nav.docked .nav__slot svg{opacity:1}
 .nav__c{display:flex;gap:1.6rem}.nav a.t{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;opacity:.8}
+.nav a.t{white-space:nowrap}@media(max-width:360px){.nav__ch{display:none}}
 .nav__ch{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;font-variant-numeric:tabular-nums;opacity:.8}
 @media(max-width:700px){.nav__c{display:none}}
 
@@ -151,6 +152,27 @@ body[data-bg="night"] .ch__cap p,body[data-bg="night"] .hero__copy p{color:rgba(
 .reel__head{padding:2.4rem var(--pad) 0;display:grid;grid-template-columns:1.3fr 1fr;gap:2.5rem;align-items:end}
 .reel__head h1{font-size:clamp(3.2rem,9vw,9rem)}
 .reel__head p{font-size:1.05rem;line-height:1.6;color:var(--ink-2);max-width:42ch}
+.pp__bar .sl{display:flex;gap:1.6rem}.pp__bar .x,.pp__bar .sl a{white-space:nowrap}.pp__bar a[aria-current="page"]{opacity:1;border-bottom:1px solid currentColor;padding-bottom:.15rem}
+.index--page{padding:3rem var(--pad) 12vh}.index__head h1{font-size:clamp(3.2rem,9vw,9rem);white-space:nowrap}
+.cpage__head{padding:2.4rem var(--pad) 0}.cpage__head h1{font-size:clamp(2.4rem,8.5vw,8.5rem);white-space:nowrap}
+.cpage__head+.about{border-top:0;padding-top:6vh}
+.cfwrap{background:var(--accent);color:var(--accent-ink)}.cfwrap .acc{color:var(--accent-ink)}
+.cf{display:grid;grid-template-columns:1fr 1fr;gap:4rem;padding:12vh var(--pad) 10vh}
+.cf__side h2{font-size:clamp(2.4rem,5.6vw,5.4rem)}.cf__clock{margin-top:2rem;opacity:.7}
+.cf__field{margin-bottom:1.6rem}
+.cf label{display:block;font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem}.cf__opt{opacity:.6}
+.cf input,.cf select,.cf textarea{width:100%;font:500 1.15rem/1.4 var(--display);color:inherit;background:transparent;border:0;border-bottom:1px solid currentColor;border-radius:0;padding:.55rem 0;letter-spacing:-.01em}
+.cf textarea{resize:vertical;min-height:9rem;border:1px solid currentColor;padding:.7rem .8rem}
+.cf select{appearance:none;-webkit-appearance:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%230b1513' stroke-width='1.6'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E") no-repeat right .2rem center;padding-right:1.6rem}
+.cf input:focus-visible,.cf select:focus-visible,.cf textarea:focus-visible,.cf button:focus-visible,.cf a:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+.cf [aria-invalid="true"]{border-color:currentColor;box-shadow:0 2px 0 0 currentColor}
+.cf__err{display:block;min-height:1.2em;margin-top:.35rem;font-family:var(--mono);font-size:.68rem;letter-spacing:.04em}
+.cf__hp{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden}
+.cf button[type="submit"]{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;background:var(--accent-ink);color:var(--accent);border:0;border-radius:999px;padding:.95rem 1.9rem;cursor:pointer}
+.cf button[type="submit"]:disabled{opacity:.6;cursor:default}
+.cf__status{margin-top:1.2rem;min-height:1.4em;font-size:1.02rem;line-height:1.5}.cf__status.is-error{font-weight:500}.cf__status a{border-bottom:1px solid currentColor}
+.cf__status.cf__done{font:500 clamp(1.5rem,2.6vw,2.2rem)/1.25 var(--display);letter-spacing:-.02em;outline:0;margin-top:0}
+@media(max-width:800px){.cf{grid-template-columns:1fr;gap:2.5rem;padding:9vh var(--pad) 8vh}}
 .nf__mark{display:flex;height:30px}.nf__mark svg{height:100%;width:auto;fill:currentColor}
 .nf__body{min-height:calc(100svh - 64px);padding:0 var(--pad) 12vh;display:flex;flex-direction:column;justify-content:center;gap:1.4rem}
 .nf__body h1{font-size:clamp(4rem,16vw,15rem);line-height:.95}
@@ -227,7 +249,7 @@ body[data-bg="night"] .ch__cap p,body[data-bg="night"] .hero__copy p{color:rgba(
   .contact__mail{margin-top:1.8rem;font-size:1rem;word-break:break-all}
   .foot{flex-direction:column;gap:.3rem;padding:1.1rem var(--pad) 1.3rem}
   /* project pages */
-  .pp__bar{height:56px}.pp__bar .l{gap:1rem}.pp__bar .x{padding:.4rem .7rem}
+  .pp__bar{height:56px}.pp__bar .l{gap:.8rem}.pp__bar .sl{gap:.9rem}.pp__bar .meta{display:none}.pp__bar .x{padding:.4rem .7rem}
   .pp__head{padding-top:1.6rem;gap:1.4rem}.pp__head h1{font-size:clamp(2.4rem,11vw,3.4rem)}
   .pp__intro{padding-top:2rem;gap:1.6rem}.pp__intro p{max-width:none}
   .pp__did{line-height:2}

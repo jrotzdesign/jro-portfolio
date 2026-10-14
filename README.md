@@ -33,6 +33,28 @@ Cloudflare Pages, Git integration: build command `npm run build`, output directo
 
 `functions/_middleware.js` runs on Cloudflare Pages in front of every request. If the `SITE_PASSWORD` secret is set on the Pages project, visitors without the signed cookie get the gate page (`functions/gate.js`) instead of the site; the right word sets a 30-day HttpOnly cookie. Set or change the word with `npx wrangler pages secret put SITE_PASSWORD --project-name jro-portfolio`; delete the secret to open the site to everyone. For local testing put `SITE_PASSWORD=…` in `.dev.vars` (git-ignored) and run `npx wrangler pages dev dist`. Visiting `/__gate/leave` clears the cookie.
 
+## Pages and the contact form
+
+Routes: `/` home, `/work/` projects (the same card grid and filters as the home index, one shared component), `/contact/` about + contact form, `/in-motion/`, `/work/<slug>/`, and `404.astro`. The nav is Projects · In motion · Contact.
+
+`/contact/` posts JSON to `functions/api/contact.js` (a Pages Function behind the gate). It drops honeypot submissions silently, validates on the server, and sends a plain-text email through the Cloudflare Email Service. Without the secrets it returns `503 {"ok":false,"reason":"not-configured"}` and the page shows the "email me directly" fallback.
+
+## Contact form setup
+
+Four steps in the Cloudflare dashboard:
+
+1. **Enable Email Routing** on jrortizdesign.com (Email → Email Routing → Enable).
+2. **Add and verify the destination address** `jrotz.design@gmail.com` (Email Routing → Destination addresses; click the confirmation link Cloudflare sends).
+3. **Create an API token** with Account → Email Sending → Edit (My Profile → API Tokens → Create Token → Custom token).
+4. **Add the variables** in the Pages project (jro-portfolio → Settings → Variables and Secrets, Production):
+   - `CF_EMAIL_TOKEN` (secret): the token from step 3
+   - `CF_ACCOUNT_ID`: the account ID (`5017f0d78a38195a445b1619c32d4f86`)
+   - `CONTACT_TO` (optional): where inquiries go; defaults to `jrotz.design@gmail.com`
+
+Abuse protection: while the password gate is on, only visitors with the cookie can reach `/api/contact`. The function also refuses a POST whose `Origin` is another site and drops honeypot hits. If the gate is ever removed, add a Cloudflare rate-limiting rule for `POST /api/contact` (Security → WAF → Rate limiting rules) before launch, since the endpoint sends real email.
+
+Mail is sent from `contact@jrortizdesign.com` with the visitor as Reply-To. The token is never in the repo or the client, and the function never logs it or the message text.
+
 ## In motion (project pages)
 
 A project with a `motion` array in `src/data/projects.js` gets an "In motion" strip between the intro and the gallery. Items are `{t:'lottie', src:'/motion/x.json', name, bg?}` (Lottie JSON, played with lottie-web's light build) or `{t:'video', src:'/motion/x.mp4', name}` (muted, looping). Pieces load when they near the viewport, play once when at least half visible, and replay on click; `bg` colours the card behind transparent Lottie files. Files live in `public/motion/`.

@@ -1,0 +1,6 @@
+---
+// The three page links, in order, for the home nav and the inner-page top bars. `current` marks the page you are on.
+const { current } = Astro.props;
+const links = [['work', '/work/', 'Projects'], ['motion', '/in-motion/', 'In motion'], ['contact', '/contact/', 'Contact']];
+---
+{links.map(([key, href, label]) => <a class="t" href={href} aria-current={current === key ? 'page' : undefined}>{label}</a>)}

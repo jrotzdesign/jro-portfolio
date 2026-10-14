@@ -1,0 +1,77 @@
+---
+import Base from '../layouts/Base.astro';
+import About from '../components/About.astro';
+import SiteLinks from '../components/SiteLinks.astro';
+import { EMAIL } from '../data/site.js';
+const mail = EMAIL;
+const topics = ['Brand identity', 'Website', 'Motion', 'Something else'];
+---
+<Base title="Contact — Jose Ortiz" description="About Jose Ortiz, and how to reach him: a short form or an email.">
+<main class="pp" id="page" data-esc="/">
+  <div class="pp__bar">
+    <div class="l"><a class="x" href="/">← Home</a><span class="sl"><SiteLinks current="contact" /></span></div>
+    <div class="l"><span class="meta">About &amp; contact</span></div>
+  </div>
+
+  <header class="cpage__head">
+    <h1 class="display" data-in>About &amp; contact</h1>
+  </header>
+
+  <About id="about" />
+
+  <div class="cfwrap">
+    <section class="cf" id="contact" aria-labelledby="cf-title">
+      <div class="cf__side">
+        <div class="mono" data-rv style="opacity:.7">Contact</div>
+        <h2 class="display" id="cf-title" data-rv>Let’s build<br />something worth running.</h2>
+        <a class="contact__mail" id="mail" href={`mailto:${mail}`} data-mail={mail}><span class="copied">Copied ✓</span>{mail}</a>
+        <div class="contact__links" data-rv>
+          <a href="https://www.linkedin.com/in/jose-r-ortiz-design/" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://mozartcompany.com" target="_blank" rel="noopener">Mozart&amp;Co.</a>
+        </div>
+        <div class="mono cf__clock" id="time" data-rv>NYC —:—</div>
+      </div>
+
+      <div class="cf__main" data-rv>
+        <form id="cform" novalidate>
+          <div class="cf__field">
+            <label for="cf-name">Name</label>
+            <input id="cf-name" name="name" type="text" required maxlength="100" autocomplete="name" aria-describedby="err-name" aria-invalid="false" />
+            <span class="cf__err" id="err-name"></span>
+          </div>
+          <div class="cf__field">
+            <label for="cf-email">Email</label>
+            <input id="cf-email" name="email" type="email" required maxlength="200" autocomplete="email" aria-describedby="err-email" aria-invalid="false" />
+            <span class="cf__err" id="err-email"></span>
+          </div>
+          <div class="cf__field">
+            <label for="cf-topic">What’s it for? <span class="cf__opt">(optional)</span></label>
+            <select id="cf-topic" name="topic">
+              <option value="">Choose one</option>
+              {topics.map((t) => <option value={t}>{t}</option>)}
+            </select>
+          </div>
+          <div class="cf__field">
+            <label for="cf-message">Message</label>
+            <textarea id="cf-message" name="message" rows="6" required maxlength="4000" aria-describedby="err-message" aria-invalid="false"></textarea>
+            <span class="cf__err" id="err-message"></span>
+          </div>
+          <div class="cf__hp" aria-hidden="true">
+            <label for="cf-company">Company</label>
+            <input id="cf-company" name="company" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+          <button type="submit">Send</button>
+        </form>
+        <p class="cf__status" id="cf-status" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+    <div class="foot"><span>© {new Date().getFullYear()} Jose R. Ortiz · JRO Design · New York</span></div>
+  </div>
+</main>
+
+<script>
+  import { initPage, destroyPage } from '../scripts/page.js';
+  document.addEventListener('astro:page-load', () => { if (document.getElementById('page')) initPage(); });
+  document.addEventListener('astro:before-swap', destroyPage);
+</script>
+</Base>

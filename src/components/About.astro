@@ -1,0 +1,19 @@
+---
+// The About copy and facts, one source for the home page and /contact/.
+const { id = 'about' } = Astro.props;
+---
+<section class="about" id={id}>
+  <div data-rv>
+    <h2 class="display">Design director.<br />Builder by <span class="acc">habit</span>.</h2>
+    <p>I lead design at Mozart&amp;Co., a brand, web, and marketing agency for healthcare and real-estate operators, where a small team ships brand, web, and motion work for dozens of facilities at once.</p>
+    <p>Before that I spent three years in e-commerce UX at Selectblinds, and before that I started JRO Design, the independent practice I still run for a handful of clients from Hermosillo to New York.</p>
+  </div>
+  <div class="facts" data-rv>
+    <div><b>Based</b><span>Astoria, Queens · NYC</span></div>
+    <div><b>Roots</b><span>Hermosillo, Sonora</span></div>
+    <div><b>Languages</b><span>English · Español</span></div>
+    <div><b>Focus</b><span>Healthcare · Real estate · Retail</span></div>
+    <div><b>Now</b><span>Mozart&amp;Co. · 2024&nbsp;→</span></div>
+    <div><b>Independent</b><span>JRO Design · 2019&nbsp;→</span></div>
+  </div>
+</section>

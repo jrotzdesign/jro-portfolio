@@ -1,7 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
 import Mark from '../components/Mark.astro';
-import Media from '../components/Media.astro';
+import ProjectIndex from '../components/ProjectIndex.astro';
+import About from '../components/About.astro';
+import SiteLinks from '../components/SiteLinks.astro';
+import { EMAIL } from '../data/site.js';
 import { projects, bySlug } from '../data/projects.js';
 import { makeJRO, staticMark } from '../lib/morph.js';
 import MotionCard from '../components/MotionCard.astro';
@@ -23,14 +26,14 @@ const chapters = [
 ];
 const count = String(chapters.length).padStart(3, '0');
 const words = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'];
-const mail = 'jrotz.design@gmail.com';
+const mail = EMAIL;
 ---
 <Base>
 <main id="home">
 <nav class="nav" id="nav">
   <a class="nav__slot" href="#top" aria-label="JRO"><Mark id="navMark" /></a>
   <div class="nav__c">
-    <a class="t" href="/in-motion/">In motion</a>
+    <SiteLinks />
   </div>
   <span class="nav__ch" id="navCh">000 / {count}</span>
 </nav>
@@ -79,36 +82,13 @@ const mail = 'jrotz.design@gmail.com';
 
 <!-- INDEX -->
 <section class="index" id="index" data-bg="bone">
-  <div class="index__head">
-    <h2 class="display" data-rv>All {words[projects.length] ?? projects.length}<span class="acc">.</span></h2>
-    <div class="filters" data-rv><button class="on" data-f="all">All</button><button data-f="mozart">Mozart&amp;Co.</button><button data-f="jro">JRO Design</button></div>
-  </div>
-  <div class="grid" id="grid">
-    {projects.map((p) => (
-      <a class="card" href={`/work/${p.slug}/`} data-slug={p.slug} data-g={p.g} data-rv>
-        <div class="card__m"><Media p={p} /></div>
-        <div class="card__t">{p.t}<span>{p.cat}</span></div>
-      </a>
-    ))}
-  </div>
+  <ProjectIndex>
+    <h2 slot="title" class="display" data-rv>All {words[projects.length] ?? projects.length}<span class="acc">.</span></h2>
+  </ProjectIndex>
 </section>
 
 <!-- ABOUT -->
-<section class="about" id="about">
-  <div data-rv>
-    <h2 class="display">Design director.<br />Builder by <span class="acc">habit</span>.</h2>
-    <p>I lead design at Mozart&amp;Co., a brand, web, and marketing agency for healthcare and real-estate operators, where a small team ships brand, web, and motion work for dozens of facilities at once.</p>
-    <p>Before that I spent three years in e-commerce UX at Selectblinds, and before that I started JRO Design, the independent practice I still run for a handful of clients from Hermosillo to New York.</p>
-  </div>
-  <div class="facts" data-rv>
-    <div><b>Based</b><span>Astoria, Queens · NYC</span></div>
-    <div><b>Roots</b><span>Hermosillo, Sonora</span></div>
-    <div><b>Languages</b><span>English · Español</span></div>
-    <div><b>Focus</b><span>Healthcare · Real estate · Retail</span></div>
-    <div><b>Now</b><span>Mozart&amp;Co. · 2024&nbsp;→</span></div>
-    <div><b>Independent</b><span>JRO Design · 2019&nbsp;→</span></div>
-  </div>
-</section>
+<About />
 
 <!-- CONTACT -->
 <section class="contact" id="contact" data-bg="accent">

@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import MotionCard from '../components/MotionCard.astro';
+import SiteLinks from '../components/SiteLinks.astro';
 import { motion, FAMILIES } from '../data/motion.js';
 import { bySlug } from '../data/projects.js';
 const brand = motion.filter((m) => m.project && bySlug[m.project]?.g === 'mozart');
@@ -11,8 +12,8 @@ const nFacility = groups.reduce((n, g) => n + g.items.length, 0);
 <Base title="In motion — Jose Ortiz" description="Logo intros and icon loops from brand work at Mozart&Co. and JRO Design.">
 <main class="pp reel" id="reel">
   <div class="pp__bar">
-    <div class="l"><a class="x" href="/#index">← Index</a><span>In motion</span></div>
-    <div class="l"><span>{motion.length} pieces</span></div>
+    <div class="l"><a class="x" href="/">← Home</a><span class="sl"><SiteLinks current="motion" /></span></div>
+    <div class="l"><span class="meta">{motion.length} pieces</span></div>
   </div>
 
   <header class="reel__head">

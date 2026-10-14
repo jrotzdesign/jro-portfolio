@@ -25,12 +25,21 @@ function privatize(res) {
   if (!/\bprivate\b/.test(out.headers.get('Cache-Control'))) out.headers.set('Cache-Control', 'private, ' + out.headers.get('Cache-Control'));
   out.headers.set('Vary', 'Cookie');
   out.headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+  return noStoreHtml(out);
+}
+
+// HTML is never kept at the edge: pages come and go (removed projects, the 404), and a stale copy must not outlive a deploy.
+// Assets (/img, /_astro, /motion, fonts) keep their long-lived headers.
+function noStoreHtml(res) {
+  if (!/text\/html/i.test(res.headers.get('Content-Type') || '')) return res;
+  const out = new Response(res.body, res);
+  out.headers.set('Cache-Control', 'private, no-store');
   return out;
 }
 
 export async function onRequest({ request, env, next }) {
   const password = env.SITE_PASSWORD;
-  if (!password) return next();                                    // gate off
+  if (!password) return noStoreHtml(await next());                  // gate off
   const url = new URL(request.url);
   const expected = await token(password);
   const cookies = Object.fromEntries((request.headers.get('Cookie') || '').split(';').map((c) => c.trim().split('=')));
@@ -56,5 +65,5 @@ export async function onRequest({ request, env, next }) {
 
   if (authed) return privatize(await next());
   if (url.pathname === '/favicon.svg' || url.pathname === '/robots.txt') return next();
-  return new Response(gatePage(), { status: 401, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow, noarchive' } });
+  return new Response(gatePage(), { status: 401, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'private, no-store', 'X-Robots-Tag': 'noindex, nofollow, noarchive' } });
 }

@@ -4,6 +4,8 @@ import { makeJRO, V } from '../lib/morph.js';
 import JRO from '../data/jro3.json';
 import OPEN from '../data/hero-open.json';
 import { initWeight } from './weight.js';
+import { initFilters } from './filters.js';
+import { initContactBits } from './contact-bits.js';
 import { initMotion } from './motion-player.js';
 
 const $ = (s, r = document) => r.querySelector(s);
@@ -178,22 +180,13 @@ export function initHome() {
   tickAll();
 
   /* index filter */
-  $$('.filters button').forEach((b) => on(b, 'click', () => {
-    $$('.filters button').forEach((z) => z.classList.toggle('on', z === b));
-    const f = b.dataset.f;
-    $$('.card').forEach((c) => c.classList.toggle('hide', !(f === 'all' || c.dataset.g === f)));
-    ScrollTrigger.refresh();
-  }));
+  cleanups.push(initFilters(document, () => ScrollTrigger.refresh()));
 
   /* reveals */
   if (!noMotion) $$('[data-rv]').forEach((el) => gsap.from(el, { y: 30, opacity: 0, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 92%', once: true } }));
 
   /* contact: copy the address; NYC clock */
-  const mail = $('#mail');
-  on(mail, 'click', (e) => { e.preventDefault(); navigator.clipboard?.writeText(mail.dataset.mail); mail.classList.add('did'); setTimeout(() => mail.classList.remove('did'), 1800); });
-  const time = $('#time');
-  const tick = () => (time.textContent = 'NYC ' + new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date()));
-  tick(); const iv = setInterval(tick, 15000); cleanups.push(() => clearInterval(iv));
+  cleanups.push(initContactBits(document));
 
   /* the Motion chapter's three frames are live motion pieces */
   cleanups.push(initWeight(document.getElementById('home'), lenis));
