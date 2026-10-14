@@ -200,8 +200,8 @@ body[data-bg="night"] .ch__cap p,body[data-bg="night"] .hero__copy p{color:rgba(
 
 /* ═══ phones (≤700px) — one pass over every section ═══ */
 @media(max-width:700px){
-  /* nav: keep Index + Contact reachable; the chapter words only exist to be scrolled to */
-  .nav__c{display:flex;gap:1.1rem}.nav__c a.t:not(:nth-last-child(-n+3)){display:none}
+  /* nav: the one page link stays visible on phones */
+  .nav__c{display:flex;gap:1.1rem}
   .nav{padding:1rem var(--pad);height:56px}.nav__slot{height:26px;width:52px}
   /* hero copy sits lower-left, one column */
   .hero__copy{gap:1.2rem}.hero__copy h1{font-size:clamp(2.1rem,9.5vw,3rem)}.hero__copy p{line-height:1.8}
