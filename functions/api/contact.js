@@ -26,7 +26,7 @@ export async function onRequest({ request, env }) {
   if (!data || typeof data !== 'object' || Array.isArray(data)) return json({ ok: false }, 400);
 
   // honeypot: a person never sees this field. Pretend it worked, send nothing.
-  if (typeof data.company === 'string' && data.company.trim() !== '') return json({ ok: true });
+  if (typeof data.jro_hp_ref === 'string' && data.jro_hp_ref.trim() !== '') return json({ ok: true });
 
   const name = typeof data.name === 'string' ? data.name.trim() : '';
   const email = typeof data.email === 'string' ? data.email.trim() : '';

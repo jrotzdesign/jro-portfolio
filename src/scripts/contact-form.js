@@ -54,7 +54,7 @@ export function initContactForm(root = document) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: fields.name.value.trim(), email: fields.email.value.trim(), topic: form.elements.topic.value,
-          message: fields.message.value.trim(), company: form.elements.company.value, page: location.pathname,
+          message: fields.message.value.trim(), jro_hp_ref: form.elements.jro_hp_ref?.value ?? '', page: location.pathname,
         }),
       });
       const data = await res.json().catch(() => null);
