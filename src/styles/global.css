@@ -97,7 +97,7 @@ body[data-bg="night"] .ch__cap p,body[data-bg="night"] .hero__copy p{color:rgba(
 .pp__mgrid.n1{grid-template-columns:1fr}.pp__mgrid.n2{grid-template-columns:1fr 1fr}
 .mo{margin:0;border-radius:6px;overflow:hidden;background:var(--mo-bg,var(--bone-2));position:relative;cursor:pointer}
 .mo__stage{aspect-ratio:3/2;display:flex;align-items:center;justify-content:center;transition:transform 1s var(--ease)}
-.mo__stage svg,.mo__stage video{width:100%;height:100%;display:block;object-fit:cover}
+.mo__stage svg{width:100%;height:100%;display:block}
 .mo figcaption{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:center;padding:.7rem .9rem;color:var(--bone);background:linear-gradient(transparent,rgba(14,15,18,.45));font-size:.64rem;letter-spacing:.1em;opacity:0;transform:translateY(6px);transition:opacity .35s,transform .5s var(--ease)}
 .mo.light figcaption{color:var(--ink);background:linear-gradient(transparent,rgba(242,243,240,.7))}
 .mo:hover figcaption,.mo.done figcaption{opacity:1;transform:none}
@@ -110,7 +110,6 @@ body[data-bg="night"] .ch__cap p,body[data-bg="night"] .hero__copy p{color:rgba(
 .mo[data-loop="seamless"] .mo__replay{display:none}
 .mo__stage{padding:var(--mo-inset,0)}
 .mo__stage svg{transform:none!important}
-.mo[data-type="html"] .mo__stage{position:relative;overflow:hidden}.mo__stage iframe{position:absolute;left:50%;top:50%;border:0;transform-origin:50% 50%;pointer-events:none;background:var(--mo-bg)}.mo[data-fit="contain"] .mo__stage svg{object-fit:contain}
 
 /* story: numbered chapters, Mozart case-study rhythm (heading left, copy right) */
 .pp__story{padding:3.5rem var(--pad) 0;display:grid;gap:0}

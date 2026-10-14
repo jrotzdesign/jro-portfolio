@@ -59,7 +59,18 @@ A project with a `motion` array in `src/data/projects.js` gets an "In motion" st
 
 ## Oct 14 — motion is vector or live code only
 
-- Every motion card is a Lottie (the same JSON files the Webflow sites play) or, for Mr. Lumberjack and Mon Amie, the
-  real HTML intro running live in a scaled frame (`public/motion/html/*`, design viewport in `w`/`h`). No recordings:
-  they went soft on retina screens.
+- Every motion card is a Lottie (the same JSON files the Webflow sites play). No recordings: they went soft on retina
+  screens.
 - Website reels and brand reels are films (click to play) on their project pages.
+
+## Oct 14 — the animation only
+
+- Cards show the animation, never the site behind it: intros that go on to wipe away and reveal their website stop on
+  the finished logo (`end`: IPX 78, Ardelle Gardens 72).
+- Intros built for a full browser window are cropped to the logo with `view` (the composition's viewBox, measured from
+  rendered frames), so a small centred mark fills the card.
+- The Mr. Lumberjack and Mon Amie HTML intros are gone. Home chapter 003 is now Motion: Lionstone lion mark, Prestige
+  facility network, IPX logo intro.
+- Weight field: letters swell in place. Each glyph's extra width is cancelled with equal negative margins, and pair
+  kerning is measured once and applied as a fixed margin (letters drawn with font-kerning:none), so neighbours, lines
+  and line breaks never move.

@@ -8,7 +8,7 @@ const jro = motion.filter((m) => m.project && bySlug[m.project]?.g === 'jro');
 const groups = FAMILIES.map((f) => ({ f, items: motion.filter((m) => m.family === f) })).filter((g) => g.items.length);
 const nFacility = groups.reduce((n, g) => n + g.items.length, 0);
 ---
-<Base title="In motion — Jose Ortiz" description="Logo intros, icon loops and website motion from brand work at Mozart&Co. and JRO Design.">
+<Base title="In motion — Jose Ortiz" description="Logo intros and icon loops from brand work at Mozart&Co. and JRO Design.">
 <main class="pp reel" id="reel">
   <div class="pp__bar">
     <div class="l"><a class="x" href="/#index">← Index</a><span>In motion</span></div>
@@ -17,7 +17,7 @@ const nFacility = groups.reduce((n, g) => n + g.items.length, 0);
 
   <header class="reel__head">
     <h1 class="display" data-in>In motion</h1>
-    <p data-in>Logo intros, icon loops and website motion. Everything loops while it’s on screen; click a piece to restart it.</p>
+    <p data-in>Logo intros and icon loops, played from the same Lottie files the live sites use. Everything loops while it’s on screen; click a piece to restart it.</p>
   </header>
 
   <section class="reel__group" aria-labelledby="g1">
@@ -33,7 +33,7 @@ const nFacility = groups.reduce((n, g) => n + g.items.length, 0);
   </section>
 
   <section class="reel__group" aria-labelledby="g3">
-    <div class="pp__motion-head"><h2 class="display" id="g3">JRO Design</h2><div class="mono">{jro.length} pieces · independent work</div></div>
+    <div class="pp__motion-head"><h2 class="display" id="g3">JRO Design</h2><div class="mono">{jro.length} {jro.length === 1 ? 'piece' : 'pieces'} · independent work</div></div>
     <div class="reel__grid">
       {jro.map((m) => (
         <div class="reel__item">

@@ -2,9 +2,7 @@
 // One motion piece (see src/data/motion.js). Behaviour lives in src/scripts/motion-player.js.
 const { m } = Astro.props;
 ---
-<figure class="mo" data-type={m.t} data-src={m.src} data-loop={m.loop} data-end={m.end} data-fit={m.fit ?? 'contain'} data-w={m.w} data-h={m.h} style={[m.bg && `--mo-bg:${m.bg}`, m.inset && `--mo-inset:${m.inset}%`].filter(Boolean).join(';') || undefined}>
-  <div class="mo__stage">
-    {m.t === 'html' && <iframe title={m.name} tabindex="-1" aria-hidden="true" scrolling="no" style={`width:${m.w}px;height:${m.h}px`}></iframe>}
-  </div>
+<figure class="mo" data-src={m.src} data-loop={m.loop} data-end={m.end} data-view={m.view} data-fit={m.fit ?? 'contain'} style={[m.bg && `--mo-bg:${m.bg}`, m.inset && `--mo-inset:${m.inset}%`].filter(Boolean).join(';') || undefined}>
+  <div class="mo__stage"></div>
   <figcaption class="mono"><span>{m.name}</span>{m.loop === 'hold' && <span class="mo__replay" aria-hidden="true">↻</span>}</figcaption>
 </figure>
