@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import Mark from '../components/Mark.astro';
+---
+<Base title="Not found — Jose Ortiz" description="This page moved or never existed.">
+<main class="pp reel nf" id="reel">
+  <div class="pp__bar">
+    <div class="l"><a class="nf__mark" href="/" aria-label="JRO, home"><Mark /></a></div>
+  </div>
+
+  <section class="nf__body">
+    <h1 class="display" data-in>Not here<span class="acc">.</span></h1>
+    <p data-in>This page moved or never existed.</p>
+    <div class="nf__links mono" data-in>
+      <a href="/#index">← All projects</a>
+      <a href="/in-motion/">In motion →</a>
+    </div>
+  </section>
+</main>
+
+<script>
+  import { initReel, destroyReel } from '../scripts/reel.js';
+  document.addEventListener('astro:page-load', () => { if (document.getElementById('reel')) initReel(); });
+  document.addEventListener('astro:before-swap', destroyReel);
+</script>
+</Base>
