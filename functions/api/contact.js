@@ -54,8 +54,9 @@ export async function onRequest({ request, env }) {
 
   const payload = {
     to: env.CONTACT_TO || DEFAULT_TO,
-    from: { email: 'contact@jrortizdesign.com', name: 'jrortizdesign.com' },
-    replyTo: { email: line(email), name: line(name) },
+    // REST field names (the Workers binding spells these `replyTo` and uses `email`): developers.cloudflare.com/email-service/api/send-emails/rest-api/
+    from: { address: 'contact@jrortizdesign.com', name: 'jrortizdesign.com' },
+    reply_to: { address: line(email), name: line(name) },
     subject: `Portfolio inquiry — ${line(name)}${topic ? ` · ${topic}` : ''}`,
     text,
   };
@@ -72,7 +73,10 @@ export async function onRequest({ request, env }) {
       console.error('contact: email API error', res.status, body && body.errors && body.errors[0] ? body.errors[0].code : 'no-code');
       return json({ ok: false }, 502);
     }
-    return json({ ok: true, delivered: true });
+    const out = await res.json().catch(() => null);
+    const delivered = Array.isArray(out?.result?.delivered) ? out.result.delivered.length : 0;
+    const queued = Array.isArray(out?.result?.queued) ? out.result.queued.length : 0;
+    return json({ ok: true, delivered: delivered > 0, queued: queued > 0 });
   } catch {
     console.error('contact: email API unreachable');
     return json({ ok: false }, 502);
