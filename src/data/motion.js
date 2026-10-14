@@ -1,7 +1,10 @@
 // Every motion piece on the site, in one place. /in-motion/ shows all of them; a project page shows only the pieces
 // whose `project` is that project's slug — a piece only appears on a project it was verified against.
 //
-//  t       'lottie' (JSON in public/motion) | 'video' (mp4 in public/motion, muted, no controls, loops)
+//  t       'lottie' (JSON in public/motion — vector, the same files the Webflow sites play)
+//          'html'   (the real HTML/CSS/GSAP intro, public/motion/html, run live in a scaled frame; w×h = its design viewport)
+//  Every piece is vector or live code, never a recording — recordings went soft on retina screens.
+//  Website reels and brand films are videos and live in each project's `films` instead.
 //  loop    'hold'     play once, rest on the finished frame for HOLD ms, play again (logo reveals)
 //          'seamless' loop continuously (icon loops, reels)
 //  end     optional last frame to play to — for files whose final frames are blank
@@ -16,7 +19,6 @@
 //    page on the MOZART&CO Webflow site (/prestige-case-study: wordmark build, the mark's four elements, facility names)
 //  · Lionstone — the lion-mark preloader shared by the Lionstone facility sites; web motion from the Mozart case study
 //  · Glades West — gladeswestrehab.com · Carlton Shores — Mozart case study · Mozart&Co. — the MOZART&CO Webflow site
-//  · Precision — Dropbox MOZART&CO/MOZART CO/Branding Animiaiton/Precision/Precision Brand Reel.mp4
 //  · IPX, Mon Amie, Mr. Lumberjack — Nando's own files (~/Downloads/ipx animation, mon-amie-theme, mr-lumberjack-site_14)
 //  · Facility intros — each facility's Webflow site; operator from the client folders in Dropbox MOZART&CO
 //    (Lion Care/Facilties, Quantum/Facilities, Paramount/Facilities, Millennial/Facilities, EXCELSIOR CARE, OAK GLEN)
@@ -33,16 +35,13 @@ export const motion = [
   { id: 'prestige-care', project: 'prestige', inset: 18, t: 'lottie', src: '/motion/prestige-care.json', name: 'Prestige · care-network icon', bg: '#0D2538', loop: 'seamless', source: 'prestigeas.com + every Prestige facility site' },
   { id: 'prestige-bloom', project: 'prestige', inset: 18, t: 'lottie', src: '/motion/prestige-bloom.json', name: 'Prestige · bloom icon', bg: '#0D2538', loop: 'seamless', source: 'prestigeas.com + every Prestige facility site' },
   { id: 'lionstone-mark', project: 'lionstone', t: 'lottie', src: '/motion/lionstone-mark.json', name: 'Lionstone · lion mark', bg: '#0E4C57', loop: 'hold', source: 'Lionstone facility sites (preloader)' },
-  { id: 'lionstone-web', project: 'lionstone', t: 'video', src: '/motion/lionstone-web-motion.mp4', poster: '/motion/lionstone-web-motion.jpg', name: 'Lionstone · the website in motion', bg: '#F4F5F5', loop: 'seamless', source: 'cdn.mozartcompany.com/work/lionstone/web-motion.mp4' },
   { id: 'glades-west-mark', project: 'glades-west', t: 'lottie', src: '/motion/glades-west-mark.json', name: 'Glades West · mark reveal', bg: '#0F4556', loop: 'hold', source: 'gladeswestrehab.com' },
-  { id: 'carlton-web', project: 'carlton-shores', t: 'video', src: '/motion/carlton-shores-website-motion.mp4', poster: '/motion/carlton-shores-website-motion.jpg', name: 'Carlton Shores · the website in motion', bg: '#002E40', loop: 'seamless', source: 'cdn.mozartcompany.com/work/carlton-shores/website-motion.mp4' },
-  { id: 'precision-reel', project: 'precision', t: 'video', src: '/motion/precision-reel.mp4', poster: '/motion/precision-reel.jpg', name: 'Precision · brand reel', bg: '#F2EDE8', loop: 'seamless', source: 'Dropbox · MOZART CO/Branding Animiaiton/Precision' },
   { id: 'mozart-wordmark', project: 'mozart', t: 'lottie', src: '/motion/mozart-wordmark.json', name: 'Mozart&Co. · wordmark', bg: '#0A0500', loop: 'hold', source: 'MOZART&CO Webflow site' },
 
   // ── JRO Design ──
-  { id: 'lumberjack-intro', project: 'lumberjack', t: 'video', src: '/motion/lumberjack-intro.mp4', poster: '/motion/lumberjack-intro.jpg', name: 'Mr. Lumberjack · landing intro', bg: '#FFFDF9', loop: 'seamless', source: '~/Downloads/mr-lumberjack-site_14/mr-lumberjack-intro.html (recorded)' },
+  { id: 'lumberjack-intro', project: 'lumberjack', t: 'html', src: '/motion/html/lumberjack-intro.html', w: 600, h: 400, name: 'Mr. Lumberjack · landing intro', bg: '#FFFDF9', loop: 'seamless', source: '~/Downloads/mr-lumberjack-site_14/mr-lumberjack-intro.html' },
   { id: 'ipx-intro', project: 'ipx', t: 'lottie', src: '/motion/ipx-intro.json', name: 'IPX · logo intro', bg: '#22254D', fit: 'cover', end: 86, loop: 'hold', source: '~/Downloads/ipx animation (After Effects → Lottie)' },
-  { id: 'mon-amie-intro', project: 'mon-amie', t: 'video', src: '/motion/mon-amie-intro.mp4', poster: '/motion/mon-amie-intro.jpg', name: 'Mon Amie · landing intro', bg: '#FFFFFF', loop: 'seamless', source: '~/Downloads/mon-amie-theme/reference (recorded)' },
+  { id: 'mon-amie-intro', project: 'mon-amie', t: 'html', src: '/motion/html/mon-amie-intro.html', w: 1200, h: 800, name: 'Mon Amie · landing intro', bg: '#C22E6C', loop: 'seamless', source: '~/Downloads/mon-amie-theme/reference/mon-amie-v10.html' },
 
   // ── facility logo intros: /in-motion/ only, grouped by operator ──
   { id: 'shore-acres', family: 'Lion Care', fit: 'cover', t: 'lottie', src: '/motion/shore-acres.json', name: 'Shore Acres', bg: '#1E2A38', loop: 'hold', source: W },
@@ -57,13 +56,10 @@ export const motion = [
   { id: 'apollo', family: 'Lion Care', t: 'lottie', src: '/motion/apollo.json', name: 'Apollo', bg: '#0A1A2E', loop: 'hold', source: W },
   { id: 'greenbriar', family: 'Quantum', fit: 'cover', t: 'lottie', src: '/motion/greenbriar.json', name: 'Greenbriar', bg: '#0F3B2E', loop: 'hold', source: W },
   { id: 'fort-lauderdale', family: 'Quantum', fit: 'cover', t: 'lottie', src: '/motion/fort-lauderdale.json', name: 'Fort Lauderdale', bg: '#4D674A', loop: 'hold', source: W },
-  { id: 'wilton-manors', family: 'Quantum', t: 'video', src: '/motion/wilton-manors.mp4', poster: '/motion/wilton-manors.jpg', name: 'Wilton Manors · brand reel', bg: '#4F5B2B', loop: 'seamless', source: 'Dropbox · MOZART CO/Branding Animiaiton/Willton Manor' },
-  { id: 'kendall-lakes', family: 'Quantum', t: 'video', src: '/motion/kendall-lakes.mp4', poster: '/motion/kendall-lakes.jpg', name: 'Kendall Lakes · brand reel', bg: '#2E0E2A', loop: 'seamless', source: 'Dropbox · MOZART CO/Branding Animiaiton/Kendall Lakes' },
+  { id: 'lakes-of-clermont', family: 'Millennial', fit: 'cover', t: 'lottie', src: '/motion/lakes-of-clermont.json', name: 'The Lakes of Clermont', bg: '#0B1A3F', loop: 'hold', source: 'lakesofclermonthrc.com' },
   { id: 'the-ponce', family: 'Paramount', fit: 'cover', t: 'lottie', src: '/motion/the-ponce.json', name: 'The Ponce', bg: '#12364F', loop: 'hold', source: W },
   { id: 'woodland-grove', family: 'Paramount', t: 'lottie', src: '/motion/woodland-grove.json', name: 'Woodland Grove', bg: '#EEF1EC', loop: 'hold', source: W },
   { id: 'ridgecrest', family: 'Paramount', t: 'lottie', src: '/motion/ridgecrest.json', name: 'Ridgecrest', bg: '#24384F', loop: 'hold', source: W },
-  { id: 'millennial', family: 'Millennial', t: 'video', src: '/motion/millennial.mp4', poster: '/motion/millennial.jpg', name: 'Millennial · brand reel', bg: '#FFFFFF', loop: 'seamless', source: 'Dropbox · MOZART CO/Branding Animiaiton/Millennial' },
-  { id: 'lakes-of-clermont', family: 'Millennial', t: 'video', src: '/motion/lakes-of-clermont.mp4', poster: '/motion/lakes-of-clermont.jpg', name: 'Lakes of Clermont · brand reel', bg: '#0B1A3A', loop: 'seamless', source: 'Dropbox · MOZART CO/Branding Animiaiton/Lakes of Clermont' },
   { id: 'alden-lakes', family: 'Millennial', t: 'lottie', src: '/motion/alden-lakes.json', name: 'Alden Lakes', bg: '#EEF0EA', loop: 'hold', source: W },
   { id: 'alora', family: 'Millennial', t: 'lottie', src: '/motion/alora.json', name: 'Alora', bg: '#F2EFE6', loop: 'hold', end: 85, source: W },
   { id: 'creekstone', family: 'Millennial', t: 'lottie', src: '/motion/creekstone.json', name: 'Creekstone', bg: '#FAF1EA', loop: 'hold', source: W },

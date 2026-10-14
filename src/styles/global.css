@@ -109,7 +109,8 @@ body[data-bg="night"] .ch__cap p,body[data-bg="night"] .hero__copy p{color:rgba(
 .pp__motion-head .mono a{border-bottom:1px solid currentColor}
 .mo[data-loop="seamless"] .mo__replay{display:none}
 .mo__stage{padding:var(--mo-inset,0)}
-.mo__stage svg{transform:none!important}.mo[data-fit="contain"] .mo__stage svg{object-fit:contain}
+.mo__stage svg{transform:none!important}
+.mo[data-type="html"] .mo__stage{position:relative;overflow:hidden}.mo__stage iframe{position:absolute;left:50%;top:50%;border:0;transform-origin:50% 50%;pointer-events:none;background:var(--mo-bg)}.mo[data-fit="contain"] .mo__stage svg{object-fit:contain}
 
 /* story: numbered chapters, Mozart case-study rhythm (heading left, copy right) */
 .pp__story{padding:3.5rem var(--pad) 0;display:grid;gap:0}

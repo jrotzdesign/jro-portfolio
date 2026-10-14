@@ -1,4 +1,4 @@
-// Motion cards (.mo): Lottie or muted video. Each card loads when it nears the viewport and plays while at least
+// Motion cards (.mo): Lottie (vector) or the live HTML intro in a scaled frame. Each card loads when it nears the viewport and plays while at least
 // a third of it is visible. 'hold' pieces play once, rest on the finished frame, then play again; 'seamless' pieces
 // loop continuously. Clicking a card replays it from the start. Off-screen cards pause.
 import lottie from 'lottie-web/build/player/lottie_light';
@@ -17,7 +17,7 @@ export function initMotion(root = document) {
   function playFromStart(el) {
     const s = state.get(el); if (!s) return;
     clearTimeout(s.timer); el.classList.remove('done');
-    if (el.dataset.type === 'video') { s.a.currentTime = 0; s.a.play().catch(() => {}); return; }
+    if (el.dataset.type === 'html') { s.a.contentWindow?.postMessage('restart', '*'); return; }
     const end = +el.dataset.end || 0;
     if (end) s.a.playSegments([0, end], true); else s.a.goToAndPlay(0, true);
   }
@@ -25,8 +25,13 @@ export function initMotion(root = document) {
   function ensure(el) {
     if (state.has(el)) return state.get(el);
     const s = { a: null, visible: false, timer: 0, started: false };
-    if (el.dataset.type === 'video') {
-      s.a = el.querySelector('video'); s.a.preload = 'auto';
+    if (el.dataset.type === 'html') {
+      // the real intro, live: a fixed design viewport (data-w × data-h) scaled to cover the card
+      s.a = el.querySelector('iframe');
+      const W = +el.dataset.w, H = +el.dataset.h, stage = el.querySelector('.mo__stage');
+      const fit = () => { const k = Math.max(stage.clientWidth / W, stage.clientHeight / H); s.a.style.transform = `translate(-50%,-50%) scale(${k})`; };
+      s.ro = new ResizeObserver(fit); s.ro.observe(stage); fit();
+      s.a.src = el.dataset.src;
     } else {
       const seamless = el.dataset.loop === 'seamless';
       s.a = lottie.loadAnimation({ container: el.querySelector('.mo__stage'), renderer: 'svg', loop: seamless, autoplay: false, path: el.dataset.src, rendererSettings: { preserveAspectRatio: el.dataset.fit === 'cover' ? 'xMidYMid slice' : 'xMidYMid meet', progressiveLoad: true } });
@@ -46,8 +51,7 @@ export function initMotion(root = document) {
 
   function show(el) {
     const s = ensure(el); s.visible = true;
-    if (reduce()) return;
-    if (el.dataset.type === 'video') { s.a.play().catch(() => {}); return; }
+    if (reduce() || el.dataset.type === 'html') return; // live HTML runs its own loop
     if (!s.a.isLoaded) return; // DOMLoaded will start it
     if (!s.started || el.classList.contains('done')) { s.started = true; playFromStart(el); }
     else if (s.a.isPaused) s.a.play();
@@ -55,7 +59,7 @@ export function initMotion(root = document) {
   function hide(el) {
     const s = state.get(el); if (!s) return;
     s.visible = false; clearTimeout(s.timer); s.timer = 0;
-    s.a.pause();
+    if (el.dataset.type !== 'html') s.a.pause();
   }
 
   const io = new IntersectionObserver((entries) => entries.forEach((en) => {
@@ -63,13 +67,13 @@ export function initMotion(root = document) {
     else if (en.intersectionRatio === 0) hide(en.target);
   }), { threshold: [0, 0.35] });
   const pre = new IntersectionObserver((entries) => entries.forEach((en) => { if (en.isIntersecting) ensure(en.target); }), { rootMargin: '600px 0px' });
-  const onClick = (e) => { const el = e.currentTarget; const s = ensure(el); if (!reduce() && (el.dataset.type === 'video' || s.a.isLoaded)) playFromStart(el); };  // an unloaded Lottie starts itself on DOMLoaded
+  const onClick = (e) => { const el = e.currentTarget; const s = ensure(el); if (!reduce() && (el.dataset.type === 'html' || s.a.isLoaded)) playFromStart(el); };  // an unloaded Lottie starts itself
   cards.forEach((el) => { io.observe(el); pre.observe(el); el.addEventListener('click', onClick); });
 
   return () => {
     io.disconnect(); pre.disconnect();
     cards.forEach((el) => el.removeEventListener('click', onClick));
-    state.forEach((s, el) => { clearTimeout(s.timer); if (el.dataset.type !== 'video') s.a.destroy(); });
+    state.forEach((s, el) => { clearTimeout(s.timer); if (el.dataset.type === 'html') { s.ro?.disconnect(); s.a.src = 'about:blank'; } else s.a.destroy(); });
     state.clear();
   };
 }

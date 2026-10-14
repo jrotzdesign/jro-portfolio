@@ -56,3 +56,10 @@ A project with a `motion` array in `src/data/projects.js` gets an "In motion" st
   in `src/data/motion.js`.
 - Hero opening: region curves are eased into the block edges while they grow (no sharp little corners); carve.py
   pulls near-edge vertices in smoothly instead of hard-snapping them.
+
+## Oct 14 — motion is vector or live code only
+
+- Every motion card is a Lottie (the same JSON files the Webflow sites play) or, for Mr. Lumberjack and Mon Amie, the
+  real HTML intro running live in a scaled frame (`public/motion/html/*`, design viewport in `w`/`h`). No recordings:
+  they went soft on retina screens.
+- Website reels and brand reels are films (click to play) on their project pages.
