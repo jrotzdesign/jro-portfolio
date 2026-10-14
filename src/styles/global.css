@@ -41,7 +41,7 @@ svg path{fill-rule:evenodd}
 .ch__num{position:absolute;left:var(--pad);top:5.5rem;font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;opacity:.6}
 .ch__word{position:absolute;left:var(--pad);right:var(--pad);top:50%;transform:translateY(-50%);font-size:clamp(5rem,22vw,22rem);line-height:.85;text-align:center;pointer-events:none;will-change:transform}
 .ch__word span{display:inline-block;will-change:transform,opacity}
-.ch__img{position:absolute;left:50%;top:50%;width:min(58vw,820px);aspect-ratio:16/10;transform:translate(-50%,-50%) scale(.18);transform-origin:center;border-radius:6px;overflow:hidden;will-change:transform;box-shadow:0 40px 100px rgba(0,0,0,.25)}
+.ch__img{position:absolute;left:50%;top:50%;width:min(58vw,820px);aspect-ratio:16/10;transform:translate(-50%,-50%) scale(.18);transform-origin:center;border-radius:6px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,.25)}
 .ch__img img{width:100%;height:100%;object-fit:cover}
 .ch__img .tile{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--night);color:var(--bone);font-family:var(--display);font-weight:500;font-size:3rem;letter-spacing:-.03em}
 .ch__cap{position:absolute;left:var(--pad);right:var(--pad);bottom:var(--pad);display:flex;justify-content:space-between;align-items:end;opacity:0;will-change:opacity,transform}
@@ -106,6 +106,62 @@ body[data-bg="night"] .ch__cap p,body[data-bg="night"] .hero__copy p{color:rgba(
 .pp__mgrid.n1 .mo__stage{aspect-ratio:16/9}
 @media(max-width:800px){.pp__mgrid,.pp__mgrid.n2{grid-template-columns:1fr}.pp__motion-head{flex-direction:column;gap:.4rem}.pp__motion-head .mono{text-align:left}}
 @media(prefers-reduced-motion:reduce){.mo figcaption{opacity:1;transform:none}}
+.pp__motion-head .mono a{border-bottom:1px solid currentColor}
+.mo[data-loop="seamless"] .mo__replay{display:none}
+.mo__stage{padding:var(--mo-inset,0)}
+.mo__stage svg{transform:none!important}.mo[data-fit="contain"] .mo__stage svg{object-fit:contain}
+
+/* story: numbered chapters, Mozart case-study rhythm (heading left, copy right) */
+.pp__story{padding:3.5rem var(--pad) 0;display:grid;gap:0}
+.pp__chap{display:grid;grid-template-columns:3rem 1fr 1.25fr;gap:2rem;align-items:baseline;padding:1.6rem 0;border-top:1px solid var(--line)}
+.pp__chap .mono{opacity:.45}
+.pp__chap h2{font-size:clamp(1.5rem,2.6vw,2.4rem)}
+.pp__chap p{font-size:1.05rem;line-height:1.6;color:var(--ink-2);max-width:52ch}
+
+/* brand: typefaces + swatches (click a swatch to copy its hex) */
+.pp__brand{padding:3.5rem var(--pad) 0;display:grid;grid-template-columns:1fr 1.6fr;gap:2.5rem;align-items:start}
+.pp__lbl{opacity:.55;margin-bottom:1rem;border-top:1px solid var(--line);padding-top:.8rem}
+.pp__face{display:flex;flex-direction:column;gap:.25rem;padding:.9rem 0;border-bottom:1px solid var(--line)}
+.pp__face b{font-family:var(--display);font-weight:500;letter-spacing:-.03em;font-size:clamp(1.5rem,2.6vw,2.2rem);line-height:1.05}
+.pp__face .mono{opacity:.55}
+.pp__sw{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:.6rem}
+.sw{position:relative;aspect-ratio:3/4;border-radius:6px;background:var(--c);color:var(--t);display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;gap:.2rem;padding:.8rem;text-align:left;box-shadow:inset 0 0 0 1px rgba(18,19,22,.08);transition:transform .5s var(--ease)}
+.sw:hover{transform:translateY(-4px)}
+.sw__n{font-family:var(--display);font-weight:500;letter-spacing:-.02em;font-size:.95rem;line-height:1.1}
+.sw__h{opacity:.75}
+.sw::after{content:"Copied";position:absolute;top:.7rem;left:.8rem;font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;opacity:0;transition:opacity .3s}
+.sw.did::after{opacity:.85}
+
+/* films: poster first, player on click */
+.pp__films{padding:3.5rem var(--pad) 0}
+.pp__fgrid{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem 1.2rem}.pp__fgrid.n1{grid-template-columns:1fr}
+.film{display:block;width:100%;text-align:left;color:inherit;cursor:pointer}
+.film__frame{position:relative;display:block;aspect-ratio:16/9;border-radius:6px;overflow:hidden;background:var(--night)}
+.film__frame img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease),opacity .4s}
+.film:hover .film__frame img{transform:scale(1.03)}
+.film__play{position:absolute;left:50%;top:50%;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(242,243,240,.92);color:var(--ink);font-size:1rem;padding-left:4px;transition:transform .5s var(--ease),background .3s}
+.film:hover .film__play{transform:scale(1.08);background:var(--accent)}
+.film__frame iframe,.film__frame video{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
+.film.on .film__play,.film.on img{opacity:0;pointer-events:none}
+.film__cap{display:flex;justify-content:space-between;gap:1rem;margin-top:.7rem;align-items:baseline}
+.film__cap b{font-family:var(--display);font-weight:500;letter-spacing:-.02em;font-size:1.1rem}
+.film__cap .mono{opacity:.55}
+
+/* /in-motion/ */
+.reel__head{padding:2.4rem var(--pad) 0;display:grid;grid-template-columns:1.3fr 1fr;gap:2.5rem;align-items:end}
+.reel__head h1{font-size:clamp(3.2rem,9vw,9rem)}
+.reel__head p{font-size:1.05rem;line-height:1.6;color:var(--ink-2);max-width:42ch}
+.reel__group{padding:4rem var(--pad) 0}
+.reel__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem 1.2rem}
+.reel__item{display:flex;flex-direction:column;gap:.6rem}
+.reel__link{opacity:.6;align-self:flex-start;border-bottom:1px solid transparent;transition:opacity .3s,border-color .3s}
+.reel__link:hover{opacity:1;border-color:currentColor}
+.reel__fam{margin-top:2.2rem}.reel__fam:first-of-type{margin-top:0}
+.reel__famh{display:flex;gap:.8rem;align-items:baseline;border-top:1px solid var(--line);padding-top:.8rem;margin-bottom:1rem;opacity:.8}.reel__famh span{opacity:.5}
+.ch__img .mo{height:100%;border-radius:0;cursor:default}.ch__img .mo__stage{aspect-ratio:auto;height:100%}.ch__img .mo figcaption{display:none}
+.ch__more{display:inline-block;margin-top:.8rem;opacity:.7;border-bottom:1px solid currentColor}
+@media(max-width:1000px){.reel__grid{grid-template-columns:1fr 1fr}}
+@media(max-width:800px){.pp__chap{grid-template-columns:2rem 1fr;gap:.4rem 1rem}.pp__chap p{grid-column:2}.pp__brand{grid-template-columns:1fr;gap:2rem}.pp__fgrid{grid-template-columns:1fr}.reel__head{grid-template-columns:1fr;gap:1rem}}
 
 .pp{background:var(--bone);color:var(--ink);min-height:100svh}
 .pp__bar{position:sticky;top:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:1rem var(--pad);height:64px;background:rgba(242,243,240,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase}
@@ -145,7 +201,7 @@ body[data-bg="night"] .ch__cap p,body[data-bg="night"] .hero__copy p{color:rgba(
 /* ═══ phones (≤700px) — one pass over every section ═══ */
 @media(max-width:700px){
   /* nav: keep Index + Contact reachable; the chapter words only exist to be scrolled to */
-  .nav__c{display:flex;gap:1.1rem}.nav__c a.t:not(:nth-last-child(-n+2)){display:none}
+  .nav__c{display:flex;gap:1.1rem}.nav__c a.t:not(:nth-last-child(-n+3)){display:none}
   .nav{padding:1rem var(--pad);height:56px}.nav__slot{height:26px;width:52px}
   /* hero copy sits lower-left, one column */
   .hero__copy{gap:1.2rem}.hero__copy h1{font-size:clamp(2.1rem,9.5vw,3rem)}.hero__copy p{line-height:1.8}
@@ -185,3 +241,11 @@ body[data-bg="night"] .ch__cap p,body[data-bg="night"] .hero__copy p{color:rgba(
 /* view transitions: the card image becomes the page hero */
 ::view-transition-old(root),::view-transition-new(root){animation-duration:.45s}
 @media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
+@media(max-width:700px){
+  .reel__grid{grid-template-columns:1fr;gap:1.4rem}
+  .reel__group{padding-top:3rem}
+  .pp__story,.pp__brand,.pp__films{padding-top:2.6rem}
+  .pp__sw{grid-template-columns:repeat(3,1fr)}
+  .film__play{width:52px;height:52px;margin:-26px 0 0 -26px}
+}
+@media(max-width:700px){.sw{aspect-ratio:1}}

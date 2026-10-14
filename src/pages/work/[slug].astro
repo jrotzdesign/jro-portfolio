@@ -1,7 +1,10 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Media from '../../components/Media.astro';
+import MotionCard from '../../components/MotionCard.astro';
+import Film from '../../components/Film.astro';
 import { projects } from '../../data/projects.js';
+import { motionFor } from '../../data/motion.js';
 
 export function getStaticPaths() {
   return projects.map((p, i) => ({ params: { slug: p.slug }, props: { p, i } }));
@@ -11,6 +14,8 @@ const n = projects.length;
 const prev = projects[(i - 1 + n) % n], next = projects[(i + 1) % n];
 const pad = (x) => String(x).padStart(2, '0');
 const credit = p.g === 'mozart' ? 'At Mozart&Co.' : 'JRO Design · independent';
+const mo = motionFor(p.slug);
+const ink = (hex) => { const n = parseInt(hex.slice(1), 16); return ((n >> 16) * 299 + ((n >> 8) & 255) * 587 + (n & 255) * 114) / 1000 > 150 ? 'var(--ink)' : 'var(--bone)'; };
 ---
 <Base title={`${p.t} — Jose Ortiz`} description={p.intro} image={p.img ?? '/og.jpg'}>
 <main class="pp" id="work" data-slug={p.slug} data-prev={`/work/${prev.slug}/`} data-next={`/work/${next.slug}/`}>
@@ -36,20 +41,55 @@ const credit = p.g === 'mozart' ? 'At Mozart&Co.' : 'JRO Design · independent';
     <ul class="pp__did" data-in>{p.did.map((d) => <li>{d}</li>)}</ul>
   </div>
 
-  {p.motion && p.motion.length > 0 && (
+  {p.story && (
+    <section class="pp__story" aria-label="The project">
+      {p.story.map((c, k) => (
+        <div class="pp__chap" data-rv>
+          <div class="mono">{pad(k + 1)}</div>
+          <h2 class="display">{c.h}</h2>
+          <p>{c.p}</p>
+        </div>
+      ))}
+    </section>
+  )}
+
+  {mo.length > 0 && (
     <section class="pp__motion" aria-label="In motion">
       <div class="pp__motion-head">
         <h2 class="display">In motion</h2>
-        <div class="mono">{p.motion.length} {p.motion.length === 1 ? 'piece' : 'pieces'} · plays in view · tap or click to replay</div>
+        <div class="mono">{mo.length} {mo.length === 1 ? 'piece' : 'pieces'} · loops while in view · <a href="/in-motion/">All motion →</a></div>
       </div>
-      <div class={`pp__mgrid n${Math.min(p.motion.length, 3)}`}>
-        {p.motion.map((m) => (
-          <figure class="mo" data-type={m.t} data-src={m.src} style={m.bg ? `--mo-bg:${m.bg}` : undefined}>
-            <div class="mo__stage">{m.t === 'video' && <video src={m.src} muted loop playsinline preload="none" />}</div>
-            <figcaption class="mono"><span>{m.name}</span><button type="button" class="mo__replay" aria-label={`Replay ${m.name}`}>↻</button></figcaption>
-          </figure>
-        ))}
-      </div>
+      <div class={`pp__mgrid n${Math.min(mo.length, 3)}`}>{mo.map((m) => <MotionCard m={m} />)}</div>
+    </section>
+  )}
+
+  {p.brand && (
+    <section class="pp__brand" aria-label="Type and colour">
+      {p.brand.type && (
+        <div class="pp__type" data-rv>
+          <div class="mono pp__lbl">Typography</div>
+          {p.brand.type.map((t) => <div class="pp__face"><b>{t.name}</b><span class="mono">{t.role}</span></div>)}
+        </div>
+      )}
+      {p.brand.palette && (
+        <div class="pp__pal" data-rv>
+          <div class="mono pp__lbl">Colour</div>
+          <div class="pp__sw">
+            {p.brand.palette.map((c) => (
+              <button type="button" class="sw" data-hex={c.hex} style={`--c:${c.hex};--t:${ink(c.hex)}`} aria-label={`Copy ${c.name} ${c.hex}`}>
+                <span class="sw__n">{c.name}</span><span class="sw__h mono">{c.hex}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </section>
+  )}
+
+  {p.films && p.films.length > 0 && (
+    <section class="pp__films" aria-label="Films">
+      <div class="pp__motion-head"><h2 class="display">{p.films.length === 1 ? 'Film' : 'Films'}</h2><div class="mono">Plays here · sound on</div></div>
+      <div class={`pp__fgrid n${Math.min(p.films.length, 2)}`}>{p.films.map((f) => <Film f={f} />)}</div>
     </section>
   )}
 

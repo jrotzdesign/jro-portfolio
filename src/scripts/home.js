@@ -3,6 +3,8 @@ import { gsap, ScrollTrigger, reduce, startScroll, scrollTo, killAll, getLenis }
 import { makeJRO, V } from '../lib/morph.js';
 import JRO from '../data/jro3.json';
 import OPEN from '../data/hero-open.json';
+import { initWeight } from './weight.js';
+import { initMotion } from './motion-player.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -49,23 +51,53 @@ export function initHome() {
   const AXIS = { corner: 'xy', top: 'y', notch: 'x', slit: 'x', gap: 'x', crotch: 'y', leg: 'x' };
   const smooth = (t) => (t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t));
   const f1 = (v) => v.toFixed(1);
-  function regionPath(r, a) {
+  // While a region is still growing, the scaled curve meets the block's straight edge at a small angle, which read as
+  // "sharp little corners" around each radius. EASE eases the curve into the edge: near every point where the region
+  // leaves an edge, the curve's distance from that edge is faded in over a run of FILLET·(1−k) units, so it always
+  // departs tangent to the edge. At k = 1 the run is zero and the shape is exactly the letter.
+  const FILLET = 26;
+  const ease3 = (t) => t * t * (3 - 2 * t);
+  function regionPath(r, a, rect) {
     const [t0, t1] = WIN[r.t], k = smooth((a - t0) / (t1 - t0));
     if (k <= 0) return '';
     const sx = AXIS[r.t] === 'y' ? 1 : k, sy = AXIS[r.t] === 'x' ? 1 : k, [ax, ay] = r.a;
-    let d = '';
-    for (let i = 0; i < r.pts.length; i++) {
-      const [x, y] = r.pts[i];
-      d += (i ? 'L' : 'M') + f1(ax + (x - ax) * sx) + ' ' + f1(ay + (y - ay) * sy);
+    const P = r.pts.map(([x, y]) => [ax + (x - ax) * sx, ay + (y - ay) * sy]);
+    const D = FILLET * (1 - k);
+    if (D > 0.05) {
+      const [x0, x1, y0, y1] = rect, n = P.length, e = 0.01;
+      const edgeOf = ([x, y]) => (Math.abs(x - x0) < e ? ['x', x0] : Math.abs(x - x1) < e ? ['x', x1] : Math.abs(y - y0) < e ? ['y', y0] : Math.abs(y - y1) < e ? ['y', y1] : null);
+      const on = P.map(edgeOf);
+      const orig = P.map((q) => q.slice());
+      for (let i = 0; i < n; i++) {
+        if (!on[i]) continue;
+        for (const dir of [1, -1]) {                       // walk away from the edge along the curve, both ways
+          const j0 = (i + dir + n) % n;
+          if (on[j0] && on[j0][0] === on[i][0] && on[j0][1] === on[i][1]) continue; // still running along this edge
+          const [axis, line] = on[i];
+          let len = 0, prev = orig[i], total = 0;
+          for (let j = j0, c = 0; c < n && !on[j]; j = (j + dir + n) % n, c++) { total += Math.hypot(orig[j][0] - prev[0], orig[j][1] - prev[1]); prev = orig[j]; }
+          const run = Math.min(D, total * 0.45);
+          if (run < 0.05) continue;
+          prev = orig[i];
+          for (let j = j0, c = 0; c < n && !on[j]; j = (j + dir + n) % n, c++) {
+            len += Math.hypot(orig[j][0] - prev[0], orig[j][1] - prev[1]); prev = orig[j];
+            if (len >= run) break;
+            const w = ease3(len / run), q = P[j];
+            if (axis === 'x') q[0] = line + (q[0] - line) * w; else q[1] = line + (q[1] - line) * w;
+          }
+        }
+      }
     }
+    let d = '';
+    for (let i = 0; i < P.length; i++) d += (i ? 'L' : 'M') + f1(P[i][0]) + ' ' + f1(P[i][1]);
     return d + 'Z';
   }
   function paintOpen(a) {
     OPEN.letters.forEach((L, i) => {
       const [x0, x1, y0, y1] = L.rect;
       let d = `M${x0} ${y0}L${x1} ${y0}L${x1} ${y1}L${x0} ${y1}Z`;
-      L.neg.forEach((r) => { d += regionPath(r, a); });
-      L.pos.forEach((r) => { d += regionPath(r, a); });
+      L.neg.forEach((r) => { d += regionPath(r, a, L.rect); });
+      L.pos.forEach((r) => { d += regionPath(r, a, L.rect); });
       openPaths[i].setAttribute('d', d);
     });
   }
@@ -112,7 +144,10 @@ export function initHome() {
     const letters = $$('span', word), imgs = $$('.ch__img', ch), cap = $('.ch__cap', ch);
     const label = () => (navCh.textContent = `${ch.dataset.n} / ${String(total).padStart(3, '0')}`);
     if (noMotion) { imgs.forEach((im) => (im.style.transform = 'translate(-50%,-50%) scale(1)')); cap.style.opacity = 1; return; }
-    const tl = gsap.timeline({ scrollTrigger: { trigger: ch, start: 'top top', end: 'bottom bottom', scrub: 0.4, onEnter: label, onEnterBack: label } });
+    // force3D:false keeps the frames on a 2D transform so the browser re-rasterizes them as they scale up
+    // (a 3D / will-change layer is rasterized once at its starting 18% and then stretched — that read as pixelated)
+    gsap.set(imgs, { force3D: false });
+    const tl = gsap.timeline({ defaults: { force3D: false }, scrollTrigger: { trigger: ch, start: 'top top', end: 'bottom bottom', scrub: 0.4, onEnter: label, onEnterBack: label } });
     // on a phone the frames are 88vw wide, so the side images fan further out (mostly off-screen) and smaller
     const fan = mobile ? innerWidth * 0.5 : innerWidth * 0.28, side = mobile ? 0.55 : 0.7;
     tl.from(letters, { yPercent: 120, opacity: 0, stagger: 0.04, duration: 0.6, ease: 'power3.out' }, 0)
@@ -159,6 +194,10 @@ export function initHome() {
   const time = $('#time');
   const tick = () => (time.textContent = 'NYC ' + new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date()));
   tick(); const iv = setInterval(tick, 15000); cleanups.push(() => clearInterval(iv));
+
+  /* the Motion chapter's three frames are live motion pieces */
+  cleanups.push(initWeight(document.getElementById('home'), lenis));
+  cleanups.push(initMotion(document.getElementById('home')));
 
   /* fonts load after first paint → recompute pins */
   document.fonts?.ready.then(() => ScrollTrigger.refresh());

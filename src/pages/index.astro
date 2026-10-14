@@ -4,6 +4,8 @@ import Mark from '../components/Mark.astro';
 import Media from '../components/Media.astro';
 import { projects, bySlug } from '../data/projects.js';
 import { makeJRO, staticMark } from '../lib/morph.js';
+import MotionCard from '../components/MotionCard.astro';
+import { byId } from '../data/motion.js';
 import JRO from '../data/jro3.json';
 const hero = staticMark(makeJRO(JRO), 2, 1);
 
@@ -14,8 +16,9 @@ const chapters = [
   { id: 'ch2', n: '002', bg: 'night', label: 'Web at scale', word: 'Web', slugs: ['prestige', 'lionstone', 'mozart'],
     copy: '57 facility sites on Webflow template systems, the agency’s own Astro build on Cloudflare, and the operations that keep all of it publishing.',
     meta: ['Webflow · Astro · Cloudflare', 'Mozart&Co. · 2024 — 26'] },
-  { id: 'ch3', n: '003', bg: 'bone', label: 'Motion & retail', word: 'Motion', slugs: ['lumberjack', 'woodies', 'oneparkway'],
-    copy: 'Logo intros, looping event graphics, scroll choreography, and the Shopify builds behind two Hermosillo-to-New-York brands.',
+  { id: 'ch3', n: '003', bg: 'bone', label: 'Motion & retail', word: 'Motion', slugs: ['lumberjack', 'ipx', 'mon-amie'],
+    motion: ['lumberjack-intro', 'ipx-intro', 'mon-amie-intro'],
+    copy: 'Landing intros, logo animation and the Shopify builds behind them, for clients from Hermosillo to New York.',
     meta: ['After Effects · GSAP · Shopify', 'JRO Design · 2019 — 26'] },
 ];
 const count = String(chapters.length).padStart(3, '0');
@@ -28,7 +31,7 @@ const mail = 'jrotz.design@gmail.com';
   <a class="nav__slot" href="#top" aria-label="JRO"><Mark id="navMark" /></a>
   <div class="nav__c">
     {chapters.map((c) => <a class="t" href={`#${c.id}`}>{c.word}</a>)}
-    <a class="t" href="#index">Index</a><a class="t" href="#contact">Contact</a>
+    <a class="t" href="#index">Index</a><a class="t" href="/in-motion/">In motion</a><a class="t" href="#contact">Contact</a>
   </div>
   <span class="nav__ch" id="navCh">000 / {count}</span>
 </nav>
@@ -59,14 +62,15 @@ const mail = 'jrotz.design@gmail.com';
       <div class="ch__num">{c.n} / {count} · {c.label}</div>
       <div class="ch__word display" data-word>{c.word}</div>
       <div class="ch__stack">
-        {c.slugs.map((s) => { const p = bySlug[s]; return (
-          <div class="ch__img">{p.img ? <img src={p.img} alt="" loading="lazy" decoding="async" /> : <div class="tile">{p.tile}</div>}</div>
+        {c.slugs.map((s, k) => { const p = bySlug[s]; const m = c.motion && byId[c.motion[k]]; return (
+          <div class="ch__img">{m ? <MotionCard m={m} /> : p.img ? <img src={p.img} alt="" loading="lazy" decoding="async" /> : <div class="tile">{p.tile}</div>}</div>
         ); })}
       </div>
       <div class="ch__cap">
         <div>
           <h3>{c.slugs.map((s, i) => <>{i > 0 && ' · '}<a href={`/work/${s}/`}>{bySlug[s].t}</a></>)}</h3>
           <p>{c.copy}</p>
+          {c.id === 'ch3' && <a class="ch__more mono" href="/in-motion/">All motion work →</a>}
         </div>
         <div class="mono">{c.meta[0]}<br />{c.meta[1]}</div>
       </div>

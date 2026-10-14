@@ -36,3 +36,23 @@ Cloudflare Pages, Git integration: build command `npm run build`, output directo
 ## In motion (project pages)
 
 A project with a `motion` array in `src/data/projects.js` gets an "In motion" strip between the intro and the gallery. Items are `{t:'lottie', src:'/motion/x.json', name, bg?}` (Lottie JSON, played with lottie-web's light build) or `{t:'video', src:'/motion/x.mp4', name}` (muted, looping). Pieces load when they near the viewport, play once when at least half visible, and replay on click; `bg` colours the card behind transparent Lottie files. Files live in `public/motion/`.
+
+## Motion, films, brand specs (Oct 13)
+
+- `src/data/motion.js` is the single list of motion pieces. A piece shows on a project page only when its `project`
+  is that project's slug; every piece shows on `/in-motion/`. Each entry records where the file came from (`source`).
+  `loop: 'hold'` plays, rests on the finished frame for `HOLD` ms, plays again; `'seamless'` loops continuously;
+  `end` trims files whose last frames are blank; `fit: 'cover'` for files that paint their own background.
+- Project data (`src/data/projects.js`) can carry `story` (numbered chapters), `brand` (typefaces + palette, swatches
+  copy their hex on click) and `films` (Vimeo id or local mp4 + poster in `public/img/films`, loaded on click only).
+- Player: `src/scripts/motion-player.js` (shared by project pages and `/in-motion/`).
+
+## Oct 13 (b)
+
+- `src/scripts/weight.js`: display type swells toward weight 800 near the pointer and eases back (and thickens a
+  little while scrolling fast). Bricolage Grotesque is loaded as a variable font (wght 200–800).
+- Motion chapter on the home page plays three motion pieces (Lumberjack, IPX, Mon Amie) instead of stills.
+- `/in-motion/` groups facility intros by operator (Lion Care, Quantum, Paramount, Millennial) — sources are recorded
+  in `src/data/motion.js`.
+- Hero opening: region curves are eased into the block edges while they grow (no sharp little corners); carve.py
+  pulls near-edge vertices in smoothly instead of hard-snapping them.

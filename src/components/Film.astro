@@ -1,0 +1,9 @@
+---
+// A film: poster + title; the Vimeo player (or local mp4) only loads when clicked.
+// f = { vimeo?: id, src?: '/motion/x.mp4', poster: '/img/films/x.webp', title, len? }
+const { f } = Astro.props;
+---
+<button type="button" class="film" data-vimeo={f.vimeo} data-src={f.src} data-title={f.title} aria-label={`Play ${f.title}`}>
+  <span class="film__frame"><img src={f.poster} alt="" loading="lazy" decoding="async" /><span class="film__play" aria-hidden="true">▶</span></span>
+  <span class="film__cap"><b>{f.title}</b>{f.len && <span class="mono">{f.len}</span>}</span>
+</button>
