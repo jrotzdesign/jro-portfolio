@@ -14,10 +14,12 @@ export function initMotion(root = document) {
   const light = (hex) => { if (!hex) return true; const n = parseInt(hex.replace('#', ''), 16); return ((n >> 16) * 299 + ((n >> 8) & 255) * 587 + (n & 255) * 114) / 1000 > 150; };
   cards.forEach((el) => { if (light(getComputedStyle(el).getPropertyValue('--mo-bg').trim())) el.classList.add('light'); });
 
+  const loaded = (ifr) => { const u = ifr.getAttribute('src'); return !!u && u !== 'about:blank'; };
+
   function playFromStart(el) {
     const s = state.get(el); if (!s) return;
     clearTimeout(s.timer); el.classList.remove('done');
-    if (el.dataset.type === 'html') { s.a.contentWindow?.postMessage('restart', '*'); return; }
+    if (el.dataset.type === 'html') { if (loaded(s.a)) s.a.contentWindow?.postMessage('restart', location.origin); else s.a.src = el.dataset.src; return; }
     const end = +el.dataset.end || 0;
     if (end) s.a.playSegments([0, end], true); else s.a.goToAndPlay(0, true);
   }
@@ -29,9 +31,8 @@ export function initMotion(root = document) {
       // the real intro, live: a fixed design viewport (data-w × data-h) scaled to cover the card
       s.a = el.querySelector('iframe');
       const W = +el.dataset.w, H = +el.dataset.h, stage = el.querySelector('.mo__stage');
-      const fit = () => { const k = Math.max(stage.clientWidth / W, stage.clientHeight / H); s.a.style.transform = `translate(-50%,-50%) scale(${k})`; };
-      s.ro = new ResizeObserver(fit); s.ro.observe(stage); fit();
-      s.a.src = el.dataset.src;
+      const fit = () => { if (!stage.clientWidth || !stage.clientHeight) return; const k = Math.max(stage.clientWidth / W, stage.clientHeight / H); s.a.style.transform = `translate(-50%,-50%) scale(${k})`; };
+      s.ro = new ResizeObserver(fit); s.ro.observe(stage); fit();   // the page loads in show(): it runs only while on screen
     } else {
       const seamless = el.dataset.loop === 'seamless';
       s.a = lottie.loadAnimation({ container: el.querySelector('.mo__stage'), renderer: 'svg', loop: seamless, autoplay: false, path: el.dataset.src, rendererSettings: { preserveAspectRatio: el.dataset.fit === 'cover' ? 'xMidYMid slice' : 'xMidYMid meet', progressiveLoad: true } });
@@ -51,7 +52,8 @@ export function initMotion(root = document) {
 
   function show(el) {
     const s = ensure(el); s.visible = true;
-    if (reduce() || el.dataset.type === 'html') return; // live HTML runs its own loop
+    if (reduce()) return;
+    if (el.dataset.type === 'html') { if (!loaded(s.a)) s.a.src = el.dataset.src; return; } // live HTML runs its own loop once loaded
     if (!s.a.isLoaded) return; // DOMLoaded will start it
     if (!s.started || el.classList.contains('done')) { s.started = true; playFromStart(el); }
     else if (s.a.isPaused) s.a.play();
@@ -59,7 +61,7 @@ export function initMotion(root = document) {
   function hide(el) {
     const s = state.get(el); if (!s) return;
     s.visible = false; clearTimeout(s.timer); s.timer = 0;
-    if (el.dataset.type !== 'html') s.a.pause();
+    if (el.dataset.type === 'html') s.a.src = 'about:blank'; else s.a.pause();   // an off-screen intro would keep looping, so unload it
   }
 
   const io = new IntersectionObserver((entries) => entries.forEach((en) => {
