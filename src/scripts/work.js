@@ -25,8 +25,11 @@ export function initWork() {
 
   /* colour swatches copy their hex */
   root.querySelectorAll('.sw').forEach((b) => on(b, 'click', () => {
-    navigator.clipboard?.writeText(b.dataset.hex);
-    b.classList.add('did'); setTimeout(() => b.classList.remove('did'), 1400);
+    // only show "copied" when the clipboard write actually succeeded (it rejects when denied or unavailable)
+    Promise.resolve(navigator.clipboard?.writeText(b.dataset.hex)).then(() => {
+      if (!navigator.clipboard) return;
+      b.classList.add('did'); setTimeout(() => b.classList.remove('did'), 1400);
+    }).catch(() => {});
   }));
 
   on(window, 'keydown', (e) => {

@@ -55,7 +55,7 @@ export function initMotion(root = document) {
   function hide(el) {
     const s = state.get(el); if (!s) return;
     s.visible = false; clearTimeout(s.timer); s.timer = 0;
-    if (el.dataset.type === 'video') s.a.pause(); else s.a.pause();
+    s.a.pause();
   }
 
   const io = new IntersectionObserver((entries) => entries.forEach((en) => {
@@ -63,7 +63,7 @@ export function initMotion(root = document) {
     else if (en.intersectionRatio === 0) hide(en.target);
   }), { threshold: [0, 0.35] });
   const pre = new IntersectionObserver((entries) => entries.forEach((en) => { if (en.isIntersecting) ensure(en.target); }), { rootMargin: '600px 0px' });
-  const onClick = (e) => { const el = e.currentTarget; ensure(el); if (!reduce()) playFromStart(el); };
+  const onClick = (e) => { const el = e.currentTarget; const s = ensure(el); if (!reduce() && (el.dataset.type === 'video' || s.a.isLoaded)) playFromStart(el); };  // an unloaded Lottie starts itself on DOMLoaded
   cards.forEach((el) => { io.observe(el); pre.observe(el); el.addEventListener('click', onClick); });
 
   return () => {

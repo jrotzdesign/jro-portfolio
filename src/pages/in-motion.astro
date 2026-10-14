@@ -38,7 +38,7 @@ const nFacility = groups.reduce((n, g) => n + g.items.length, 0);
       {jro.map((m) => (
         <div class="reel__item">
           <MotionCard m={m} />
-          <a class="reel__link mono" href={`/work/${m.project}/`}>{bySlug[m.project]?.t} →</a>
+          <a class="reel__link mono" href={`/work/${m.project}/`}>{bySlug[m.project]?.t ?? m.project} →</a>
         </div>
       ))}
     </div>

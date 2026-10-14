@@ -7,6 +7,10 @@ const smooth = (t) => (t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t));
 function split(el) {
   if (el.dataset.wf) return;
   el.dataset.wf = '1';
+  // the per-letter spans are decorative: give the heading its real text as its name (line breaks read as spaces)
+  const copy = el.cloneNode(true);
+  copy.querySelectorAll('br').forEach((b) => b.replaceWith(' '));
+  el.setAttribute('aria-label', copy.textContent.replace(/\s+/g, ' ').trim());
   const walk = (node) => {
     [...node.childNodes].forEach((n) => {
       if (n.nodeType === 3) {
@@ -14,7 +18,7 @@ function split(el) {
         n.textContent.split(/(\s+)/).forEach((part) => {
           if (!part) return;
           if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
-          const w = document.createElement('span'); w.className = 'wf-w';
+          const w = document.createElement('span'); w.className = 'wf-w'; w.setAttribute('aria-hidden', 'true');
           [...part].forEach((ch) => { const l = document.createElement('span'); l.className = 'wf-l'; l.textContent = ch; w.appendChild(l); });
           frag.appendChild(w);
         });
@@ -36,15 +40,20 @@ export function initWeight(root = document, lenis = null) {
   const visible = new Set();
   const io = new IntersectionObserver((es) => es.forEach((e) => (e.isIntersecting ? visible.add(e.target) : visible.delete(e.target))), { rootMargin: '100px 0px' });
   els.forEach((el) => io.observe(el));
-  const move = (e) => { px = e.clientX; py = e.clientY; };
-  const leave = () => { px = py = -1e4; };
+  let settled = false;                       // true once nothing is moving: the loop then skips its work until input returns
+  const move = (e) => { px = e.clientX; py = e.clientY; settled = false; };
+  const leave = () => { px = py = -1e4; settled = false; };
+  // `pointerleave` never fires on document: use the root element for the mouse leaving the window, and the end of a touch
+  const up = (e) => { if (e.pointerType !== 'mouse') leave(); };
   addEventListener('pointermove', move, { passive: true });
-  document.addEventListener('pointerleave', leave);
+  document.documentElement.addEventListener('mouseleave', leave);
+  addEventListener('pointerup', up); addEventListener('pointercancel', up);
 
   function tick() {
     raf = requestAnimationFrame(tick);
     const v = lenis ? Math.abs(lenis.velocity || 0) : 0;
     boost += (Math.min(1, v / 40) - boost) * 0.08;
+    if (settled && v < 1 && boost < 0.002) return;
     const live = letters.filter((o) => visible.has(o.el));
     // read every position first, then write every weight — interleaving the two would force a layout per letter
     const pointer = px > -1e3;
@@ -53,16 +62,20 @@ export function initWeight(root = document, lenis = null) {
       const r = o.l.getBoundingClientRect();
       o.near = smooth(1 - Math.hypot(r.left + r.width / 2 - px, r.top + r.height / 2 - py) / R);
     }
+    let moving = false;
     for (const o of live) {
       o.t = Math.min(MAX, o.base + (MAX - o.base) * o.near + SCROLL_BOOST * boost);
       o.w += (o.t - o.w) * LERP;
+      if (Math.abs(o.t - o.w) > 0.25) moving = true;
       const w = Math.round(o.w * 2) / 2;
       if (w !== o.last) { o.last = w; o.l.style.fontVariationSettings = `"opsz" 96, "wght" ${w}`; }
     }
+    if (!moving && !pointer) settled = true;
   }
   raf = requestAnimationFrame(tick);
   return () => {
     cancelAnimationFrame(raf); io.disconnect();
-    removeEventListener('pointermove', move); document.removeEventListener('pointerleave', leave);
+    removeEventListener('pointermove', move); document.documentElement.removeEventListener('mouseleave', leave);
+    removeEventListener('pointerup', up); removeEventListener('pointercancel', up);
   };
 }
