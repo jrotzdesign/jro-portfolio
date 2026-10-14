@@ -87,13 +87,13 @@ export function initWeight(root = document, lenis = null) {
     return (o.g[k] + (o.g[k + 1] - o.g[k]) * (t - k)) * fs.get(o.el);
   };
   let rz = 0;
-  const onResize = () => { clearTimeout(rz); rz = setTimeout(() => { sizes(); settled = false; }, 120); };
+  const onResize = () => { clearTimeout(rz); rz = setTimeout(() => { sizes(); letters.forEach((o) => { o.last = undefined; }); settled = false; }, 120); };  // margins are px: rewrite them at the new size
   addEventListener('resize', onResize, { passive: true });
 
   let px = -1e4, py = -1e4, boost = 0, raf = 0;
   let settled = false;                       // true once nothing is moving: the loop then skips its work until input returns
   const visible = new Set();
-  const io = new IntersectionObserver((es) => es.forEach((e) => (e.isIntersecting ? visible.add(e.target) : visible.delete(e.target))), { rootMargin: '100px 0px' });
+  const io = new IntersectionObserver((es) => es.forEach((e) => (e.isIntersecting ? visible.add(e.target) : visible.delete(e.target), settled = false)), { rootMargin: '100px 0px' });
   els.forEach((el) => io.observe(el));
   const move = (e) => { px = e.clientX; py = e.clientY; settled = false; };
   const leave = () => { px = py = -1e4; settled = false; };
