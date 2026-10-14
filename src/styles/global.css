@@ -57,7 +57,7 @@ body[data-bg="night"] .ch__cap p,body[data-bg="night"] .hero__copy p{color:rgba(
 /* index */
 .index{padding:16vh var(--pad) 12vh}
 .index__head{display:flex;justify-content:space-between;align-items:end;margin-bottom:2.5rem}
-.index__head h2{font-size:clamp(2.4rem,5vw,5rem)}
+.index__head h2{font-size:clamp(2.4rem,5vw,5rem);white-space:nowrap}   /* shrink-wrapped by the flex row: hover widening must not wrap it */
 .filters{display:flex;gap:1.2rem}.filters button{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;opacity:.55;padding:.3rem 0;border-bottom:1px solid transparent}.filters button.on{opacity:1;border-color:currentColor}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem 1.2rem}
 .card{display:block;position:relative}
@@ -91,7 +91,7 @@ body[data-bg="night"] .ch__cap p,body[data-bg="night"] .hero__copy p{color:rgba(
 /* in motion: Lottie / video pieces that play when in view, replay on click */
 .pp__motion{padding:3.5rem var(--pad) 0}
 .pp__motion-head{display:flex;justify-content:space-between;align-items:baseline;gap:2rem;margin-bottom:1.4rem}
-.pp__motion-head h2{font-size:clamp(1.8rem,3.6vw,3.4rem)}
+.pp__motion-head h2{font-size:clamp(1.8rem,3.6vw,3.4rem);white-space:nowrap}
 .pp__motion-head .mono{opacity:.55;text-align:right}
 .pp__mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
 .pp__mgrid.n1{grid-template-columns:1fr}.pp__mgrid.n2{grid-template-columns:1fr 1fr}
