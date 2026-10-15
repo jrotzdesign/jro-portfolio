@@ -180,7 +180,8 @@ body[data-bg="night"] .ch__cap p,body[data-bg="night"] .hero__copy p{color:rgba(
 .nf__links{display:flex;gap:2rem;flex-wrap:wrap;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase}.nf__links a{border-bottom:1px solid currentColor;padding-bottom:.25rem}
 .reel__group{padding:4rem var(--pad) 0}
 .reel__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem 1.2rem}
-.reel__item{display:flex;flex-direction:column;gap:.6rem}
+.reel__item{display:flex;flex-direction:column;gap:.6rem;scroll-margin-top:6rem}
+.reel__famn{margin:-.4rem 0 1rem;opacity:.55}
 .reel__link{opacity:.6;align-self:flex-start;border-bottom:1px solid transparent;transition:opacity .3s,border-color .3s}
 .reel__link:hover{opacity:1;border-color:currentColor}
 .reel__fam{margin-top:2.2rem}.reel__fam:first-of-type{margin-top:0}

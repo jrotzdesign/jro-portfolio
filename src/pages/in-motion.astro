@@ -2,12 +2,14 @@
 import Base from '../layouts/Base.astro';
 import MotionCard from '../components/MotionCard.astro';
 import SiteLinks from '../components/SiteLinks.astro';
-import { motion, FAMILIES } from '../data/motion.js';
+import { motion, FAMILIES, AGENCY } from '../data/motion.js';
 import { bySlug } from '../data/projects.js';
-const brand = motion.filter((m) => m.project && bySlug[m.project]?.g === 'mozart');
-const jro = motion.filter((m) => m.project && bySlug[m.project]?.g === 'jro');
+const prestige = motion.filter((m) => m.project === 'prestige');
+const agency = motion.filter((m) => m.family === AGENCY);
 const groups = FAMILIES.map((f) => ({ f, items: motion.filter((m) => m.family === f) })).filter((g) => g.items.length);
 const nFacility = groups.reduce((n, g) => n + g.items.length, 0);
+const pieces = (n) => `${n} ${n === 1 ? 'piece' : 'pieces'}`;
+const notes = { Lionstone: 'The mark every Lionstone facility site opens with.' };
 ---
 <Base title="In motion — Jose Ortiz" description="Logo intros and icon loops from brand work at Mozart&Co. and JRO Design.">
 <main class="pp reel" id="reel">
@@ -22,37 +24,38 @@ const nFacility = groups.reduce((n, g) => n + g.items.length, 0);
   </header>
 
   <section class="reel__group" aria-labelledby="g1">
-    <div class="pp__motion-head"><h2 class="display" id="g1">Brand systems</h2><div class="mono">{brand.length} pieces · each links to its project</div></div>
-    <div class="reel__grid">
-      {brand.map((m) => (
-        <div class="reel__item">
-          <MotionCard m={m} />
-          <a class="reel__link mono" href={`/work/${m.project}/`}>{bySlug[m.project]?.t ?? m.project} →</a>
-        </div>
-      ))}
-    </div>
-  </section>
-
-  <section class="reel__group" aria-labelledby="g3">
-    <div class="pp__motion-head"><h2 class="display" id="g3">JRO Design</h2><div class="mono">{jro.length} {jro.length === 1 ? 'piece' : 'pieces'} · independent work</div></div>
-    <div class="reel__grid">
-      {jro.map((m) => (
-        <div class="reel__item">
-          <MotionCard m={m} />
-          <a class="reel__link mono" href={`/work/${m.project}/`}>{bySlug[m.project]?.t ?? m.project} →</a>
-        </div>
-      ))}
-    </div>
+    <div class="pp__motion-head"><h2 class="display" id="g1">Prestige Healthcare</h2><div class="mono">{pieces(prestige.length)} · the brand system in motion · <a href="/work/prestige/">Prestige Healthcare →</a></div></div>
+    <div class="reel__grid">{prestige.map((m) => <div class="reel__item" id={m.id}><MotionCard m={m} /></div>)}</div>
   </section>
 
   <section class="reel__group" aria-labelledby="g2">
-    <div class="pp__motion-head"><h2 class="display" id="g2">Facility logo intros</h2><div class="mono">{nFacility} pieces · at Mozart&amp;Co. · grouped by operator</div></div>
+    <div class="pp__motion-head"><h2 class="display" id="g2">Facility logo intros</h2><div class="mono">{pieces(nFacility)} · at Mozart&amp;Co. · grouped by operator</div></div>
     {groups.map((g) => (
       <div class="reel__fam">
-        <div class="mono reel__famh">{g.f === 'More' ? 'More facilities' : g.f}<span>{g.items.length}</span></div>
-        <div class="reel__grid">{g.items.map((m) => <div class="reel__item"><MotionCard m={m} /></div>)}</div>
+        <div class="mono reel__famh">{g.f}<span>{g.items.length}</span></div>
+        {notes[g.f] && <p class="mono reel__famn">{notes[g.f]}</p>}
+        <div class="reel__grid">
+          {g.items.map((m) => (
+            <div class="reel__item" id={m.id}>
+              <MotionCard m={m} />
+              {m.project && <a class="reel__link mono" href={`/work/${m.project}/`}>{bySlug[m.project]?.t ?? m.project} →</a>}
+            </div>
+          ))}
+        </div>
       </div>
     ))}
+  </section>
+
+  <section class="reel__group" aria-labelledby="g3">
+    <div class="pp__motion-head"><h2 class="display" id="g3">Agency and independent</h2><div class="mono">{pieces(agency.length)}</div></div>
+    <div class="reel__grid">
+      {agency.map((m) => (
+        <div class="reel__item" id={m.id}>
+          <MotionCard m={m} />
+          <a class="reel__link mono" href={`/work/${m.project}/`}>{bySlug[m.project]?.t ?? m.project} →</a>
+        </div>
+      ))}
+    </div>
   </section>
 
   <div class="pp__next">
@@ -63,7 +66,12 @@ const nFacility = groups.reduce((n, g) => n + g.items.length, 0);
 
 <script>
   import { initReel, destroyReel } from '../scripts/reel.js';
-  document.addEventListener('astro:page-load', () => { if (document.getElementById('reel')) initReel(); });
+  document.addEventListener('astro:page-load', () => { if (!document.getElementById('reel')) return;
+    initReel();
+    // a router swap (e.g. from the home chapter caption) doesn't honour the #hash on its own
+    const t = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (t) requestAnimationFrame(() => t.scrollIntoView({ block: 'start' }));
+  });
   document.addEventListener('astro:before-swap', destroyReel);
 </script>
 </Base>

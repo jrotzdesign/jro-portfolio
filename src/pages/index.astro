@@ -19,8 +19,11 @@ const chapters = [
   { id: 'ch2', n: '002', bg: 'night', label: 'Web at scale', word: 'Web', slugs: ['prestige', 'lionstone', 'mozart'],
     copy: '57 facility sites on Webflow template systems, the agency’s own Astro build on Cloudflare, and the operations that keep all of it publishing.',
     meta: ['Webflow · Astro · Cloudflare', 'Mozart&Co. · 2024 — 26'] },
-  { id: 'ch3', n: '003', bg: 'bone', label: 'Motion', word: 'Motion', slugs: ['lionstone', 'prestige', 'ipx'],
-    motion: ['lionstone-mark', 'prestige-network', 'ipx-intro'],
+  { id: 'ch3', n: '003', bg: 'bone', label: 'Motion', word: 'Motion', slugs: ['prestige', 'alora', 'lexington'],
+    // slugs here are only keys — Alora and Lexington have no project page, so each item carries its own label and link
+    // first item is the large front card, then left, then right (see imgs[0..2] in home.js)
+    motion: ['prestige-wordmark', 'alora', 'lexington'],
+    links: [{ t: 'Prestige Healthcare', href: '/work/prestige/' }, { t: 'Alora', href: '/in-motion/#alora' }, { t: 'Lexington', href: '/in-motion/#lexington' }],
     copy: 'Logo reveals and site intros, animated in After Effects and shipped as Lottie so they stay sharp on every screen. They run on dozens of live sites.',
     meta: ['After Effects · Lottie', 'Mozart&Co. · JRO'] },
 ];
@@ -65,12 +68,12 @@ const mail = EMAIL;
       <div class="ch__word display" data-word>{c.word}</div>
       <div class="ch__stack">
         {c.slugs.map((s, k) => { const p = bySlug[s]; const m = c.motion && byId[c.motion[k]]; return (
-          <div class="ch__img">{m ? <MotionCard m={m} /> : p.img ? <img src={p.img} alt="" loading="lazy" decoding="async" /> : <div class="tile">{p.tile}</div>}</div>
+          <div class="ch__img">{m ? <MotionCard m={m} /> : p?.img ? <img src={p.img} alt="" loading="lazy" decoding="async" /> : <div class="tile">{p?.tile}</div>}</div>
         ); })}
       </div>
       <div class="ch__cap">
         <div>
-          <h3>{c.slugs.map((s, i) => <>{i > 0 && ' · '}<a href={`/work/${s}/`}>{bySlug[s].t}</a></>)}</h3>
+          <h3>{(c.links ?? c.slugs.map((s) => ({ t: bySlug[s].t, href: `/work/${s}/` }))).map((l, i) => <>{i > 0 && ' · '}<a href={l.href}>{l.t}</a></>)}</h3>
           <p>{c.copy}</p>
           {c.id === 'ch3' && <a class="ch__more mono" href="/in-motion/">All motion work →</a>}
         </div>

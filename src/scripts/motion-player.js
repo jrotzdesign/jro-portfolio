@@ -1,5 +1,5 @@
 // Motion cards (.mo): Lottie files, rendered as SVG so they stay sharp at any size. Each card loads when it nears the
-// viewport and plays while at least a third of it is visible. 'hold' pieces play once (to `end` when set), rest on the
+// viewport and plays while at least a third of it is visible. 'hold' pieces play once (from `start`, to `end` when set), rest on the
 // finished logo, then play again; 'seamless' pieces loop continuously. Clicking a card replays it. Off-screen cards pause.
 // Reduced motion: every card shows its finished frame and stays still.
 import lottie from 'lottie-web/build/player/lottie_light';
@@ -18,8 +18,8 @@ export function initMotion(root = document) {
   function playFromStart(el) {
     const s = state.get(el); if (!s) return;
     clearTimeout(s.timer); el.classList.remove('done');
-    const end = +el.dataset.end || 0;
-    if (end) s.a.playSegments([0, end], true); else s.a.goToAndPlay(0, true);
+    const end = +el.dataset.end || 0, start = +el.dataset.start || 0;  // start: skip an empty opening (a seamless loop returns to it too)
+    if (end || start) s.a.playSegments([start, end || s.a.totalFrames], true); else s.a.goToAndPlay(0, true);
   }
 
   function ensure(el) {
