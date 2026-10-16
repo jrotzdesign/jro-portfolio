@@ -8,10 +8,10 @@
 //   films:  [{vimeo|src, poster, title, len?}]                   — click-to-load; posters in public/img/films
 export const projects=[
     {slug:'mozart',t:'Mozart&Co. website',cat:'Agency',g:'mozart',img:'/img/mozart-site.webp',href:'https://mozartcompany.com',client:'Mozart&Co.',role:'Design Director · design & build',year:'2026',stack:'Astro · Cloudflare Pages · GSAP · Lenis',
-      intro:'The agency’s own site, designed and built in-house. A system of paper and ink, one serif, one sans, and a motion language that stays out of the way of the work.',
-      did:['Art direction & design system','Astro build on Cloudflare','GSAP / Lenis motion','Careers page — the Figma-canvas conceit','Maestro: the hidden music player'],
+      intro:'I designed and built mozartcompany.com in-house at Mozart. It runs on Astro and Cloudflare, with GSAP and Lenis handling the scroll and animation.',
+      did:['Art direction and design system','Built in Astro on Cloudflare','Scroll and motion with GSAP and Lenis','Careers page that looks like a Figma canvas'],
       gallery:[{src:'/img/mozart-site.webp',wide:true}],
-      outcome:'Live at mozartcompany.com. The careers page became the reference for the playful register — frame labels, drifting collaborator cursors, a selection box with real dimensions.',links:[['Visit site ↗','https://mozartcompany.com'],['Careers page ↗','https://mozartcompany.com/careers']]},
+      outcome:'Live at mozartcompany.com. I designed it, built it and launched it.',links:[['Visit site ↗','https://mozartcompany.com']]},
     {slug:'prestige',t:'Prestige Healthcare',cat:'22 sites',g:'mozart',img:'/img/prestige-thumb.webp',href:'https://mozartcompany.com/work/prestige',client:'Prestige Healthcare Administrative Services',role:'Design Director · web system & ops',year:'2024 — 26',stack:'Webflow · CMS · Mapbox',
       intro:'A network of skilled-nursing facilities across the East Coast, each with its own front door, running on one identity and one Webflow template system. Twenty-two sites today, built to scale into more.',
       did:['Facility template system on Webflow','Per-site CMS: teams, services, galleries','Corporate hub with state filtering','QA, content and launch for the Virginia five','Ongoing operations: forms, staff changes, campaigns'],
