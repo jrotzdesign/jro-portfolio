@@ -26,7 +26,7 @@ export function initPage() {
   const key = (e) => {
     const typing = /^(input|textarea|select)$/i.test(e.target?.tagName || '');
     const form = root.querySelector('#cform');
-    const dirty = !!form && [...form.elements].some((f) => f.name && f.name !== 'topic' && f.type !== 'submit' && String(f.value).trim() !== '');
+    const dirty = !!form && [...form.elements].some((f) => f.name && f.name !== 'topic' && f.type !== 'submit' && f.type !== 'hidden' && String(f.value).trim() !== '');
     if (e.key === 'Escape' && !typing && !dirty && !(e.metaKey || e.ctrlKey || e.altKey)) navigate(root.dataset.esc || '/');   // never discard a message in progress
   };
   window.addEventListener('keydown', key); cleanups.push(() => window.removeEventListener('keydown', key));

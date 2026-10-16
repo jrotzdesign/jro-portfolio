@@ -1,10 +1,17 @@
 ---
 // Card / hero media for a project: its image, or a typographic tile when there is no image yet.
 // `name` gives the element a view-transition name so the card image flies into the project hero.
-interface Props { p: any; loading?: 'lazy' | 'eager' }
-const { p, loading = 'lazy' } = Astro.props;
+// `alt` defaults to "": a card's link text already names the project. The project hero passes descriptive alt.
+import { dims } from '../data/dims.js';
+// `priority` marks the one image per page worth fetchpriority=high (the project hero, the first /work/ card).
+interface Props { p: any; loading?: 'lazy' | 'eager'; alt?: string; priority?: boolean }
+const { p, loading = 'lazy', alt = '', priority = false } = Astro.props;
+const fp = priority ? 'high' : undefined;
 const name = `media-${p.slug}`;
 ---
+{/* two branches on purpose: Astro renders alt={''} as a bare `alt`, so the empty case writes a literal alt="" */}
 {p.img
-  ? <img src={p.img} alt={p.t} loading={loading} decoding="async" transition:name={name} />
+  ? (alt
+    ? <img src={p.img} alt={alt} {...dims(p.img)} loading={loading} fetchpriority={fp} decoding="async" transition:name={name} />
+    : <img src={p.img} alt="" {...dims(p.img)} loading={loading} fetchpriority={fp} decoding="async" transition:name={name} />)
   : <div class="tile" style={p.bg ? `background:${p.bg}` : undefined} transition:name={name}>{p.tile}</div>}

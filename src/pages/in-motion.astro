@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import MotionCard from '../components/MotionCard.astro';
 import SiteLinks from '../components/SiteLinks.astro';
+import { PAGES } from '../data/seo.js';
 import { motion, FAMILIES, AGENCY } from '../data/motion.js';
 import { bySlug } from '../data/projects.js';
 const prestige = motion.filter((m) => m.project === 'prestige');
@@ -11,7 +12,7 @@ const nFacility = groups.reduce((n, g) => n + g.items.length, 0);
 const pieces = (n) => `${n} ${n === 1 ? 'piece' : 'pieces'}`;
 const notes = { Lionstone: 'The mark every Lionstone facility site opens with.' };
 ---
-<Base title="In motion — Jose Ortiz" description="Logo intros and icon loops from brand work at Mozart&Co. and JRO Design.">
+<Base title={PAGES.motion.title} description={PAGES.motion.description}>
 <main class="pp reel" id="reel">
   <div class="pp__bar">
     <div class="l"><a class="x" href="/">← Home</a><span class="sl"><SiteLinks current="motion" /></span></div>

@@ -1,10 +1,12 @@
 // POST /api/contact — sends the contact form as a plain-text email through the Cloudflare Email Service.
 // Secrets/vars (Pages project settings): CF_EMAIL_TOKEN (secret), CF_ACCOUNT_ID, optional CONTACT_TO.
-// The gate middleware in ../_middleware.js already sits in front of this route.
+// Public endpoint. Bot defences: same-site Origin check, a hidden honeypot field, and a time trap (a person takes
+// more than 3 seconds to fill the form, and the page will not have been open for more than 2 hours).
 // The token and the visitor's message are never logged.
 
 const TOPICS = ['Brand identity', 'Website', 'Motion', 'Something else'];
 const DEFAULT_TO = 'jrotz.design@gmail.com';
+const MIN_MS = 3000, MAX_MS = 2 * 60 * 60 * 1000;
 // local part, then a domain of 2+ dot-separated labels (no empty labels: a@.b.co and a@b..com fail)
 const EMAIL_RE = /^[^\s@<>,;:"()[\]\\]+@[^\s@<>,;:"()[\]\\.]+(\.[^\s@<>,;:"()[\]\\.]+)*\.[^\s@<>,;:"()[\]\\.]{2,}$/;
 
@@ -17,9 +19,9 @@ const line = (s) => String(s).replace(LINEBREAKS, ' ').trim();
 
 export async function onRequest({ request, env }) {
   if (request.method !== 'POST') return json({ ok: false }, 405, { Allow: 'POST' });
-  // browsers always send Origin on a cross-site POST: refuse one that is not this site (a script with no Origin is stopped by the gate)
+  // browsers send Origin on every fetch() POST: refuse a missing one or one from another site
   const origin = request.headers.get('Origin');
-  if (origin && origin !== new URL(request.url).origin) return json({ ok: false }, 403);
+  if (!origin || origin !== new URL(request.url).origin) return json({ ok: false }, 403);
 
   let data;
   try { data = await request.json(); } catch { return json({ ok: false }, 400); }
@@ -27,6 +29,10 @@ export async function onRequest({ request, env }) {
 
   // honeypot: a person never sees this field. Pretend it worked, send nothing.
   if (typeof data.jro_hp_ref === 'string' && data.jro_hp_ref.trim() !== '') return json({ ok: true });
+  // time trap: both times come from the visitor's clock, so a wrong system clock cannot drop a real message.
+  // Faster than 3 s, older than 2 h, or missing: pretend it worked, send nothing.
+  const elapsed = Number(data.jro_sent) - Number(data.jro_ts);
+  if (!Number.isFinite(elapsed) || elapsed < MIN_MS || elapsed > MAX_MS) return json({ ok: true });
 
   const name = typeof data.name === 'string' ? data.name.trim() : '';
   const email = typeof data.email === 'string' ? data.email.trim() : '';

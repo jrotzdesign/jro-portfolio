@@ -4,12 +4,14 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
+    "dev": "node scripts/prebuild.mjs && astro dev",
+    "build": "node scripts/prebuild.mjs && astro build && node scripts/check-seo.mjs",
     "preview": "astro preview",
-    "shoot": "node scripts/shoot.mjs"
+    "shoot": "node scripts/shoot.mjs",
+    "check:seo": "node scripts/check-seo.mjs"
   },
   "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
     "astro": "^5.13.0",
     "gsap": "^3.13.0",
     "lenis": "^1.3.0",

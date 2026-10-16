@@ -5,6 +5,8 @@ import ProjectIndex from '../components/ProjectIndex.astro';
 import About from '../components/About.astro';
 import SiteLinks from '../components/SiteLinks.astro';
 import { EMAIL } from '../data/site.js';
+import { dims } from '../data/dims.js';
+import { PAGES, person, website, graph } from '../data/seo.js';
 import { projects, bySlug } from '../data/projects.js';
 import { makeJRO, staticMark } from '../lib/morph.js';
 import MotionCard from '../components/MotionCard.astro';
@@ -31,7 +33,7 @@ const count = String(chapters.length).padStart(3, '0');
 const words = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'];
 const mail = EMAIL;
 ---
-<Base>
+<Base title={PAGES.home.title} description={PAGES.home.description} jsonld={graph(person(), website())}>
 <main id="home">
 <nav class="nav" id="nav">
   <a class="nav__slot" href="#top" aria-label="JRO"><Mark id="navMark" /></a>
@@ -68,12 +70,12 @@ const mail = EMAIL;
       <div class="ch__word display" data-word>{c.word}</div>
       <div class="ch__stack">
         {c.slugs.map((s, k) => { const p = bySlug[s]; const m = c.motion && byId[c.motion[k]]; return (
-          <div class="ch__img">{m ? <MotionCard m={m} /> : p?.img ? <img src={p.img} alt="" loading="lazy" decoding="async" /> : <div class="tile">{p?.tile}</div>}</div>
+          <div class="ch__img">{m ? <MotionCard m={m} /> : p?.img ? <img src={p.img} alt="" {...dims(p.img)} loading="lazy" decoding="async" /> : <div class="tile">{p?.tile}</div>}</div>
         ); })}
       </div>
       <div class="ch__cap">
         <div>
-          <h3>{(c.links ?? c.slugs.map((s) => ({ t: bySlug[s].t, href: `/work/${s}/` }))).map((l, i) => <>{i > 0 && ' · '}<a href={l.href}>{l.t}</a></>)}</h3>
+          <h2>{(c.links ?? c.slugs.map((s) => ({ t: bySlug[s].t, href: `/work/${s}/` }))).map((l, i) => <>{i > 0 && ' · '}<a href={l.href}>{l.t}</a></>)}</h2>
           <p>{c.copy}</p>
           {c.id === 'ch3' && <a class="ch__more mono" href="/in-motion/">All motion work →</a>}
         </div>
@@ -96,7 +98,7 @@ const mail = EMAIL;
 <!-- CONTACT -->
 <section class="contact" id="contact" data-bg="accent">
   <div class="contact__body">
-    <div class="mono" data-rv style="opacity:.7">Contact</div>
+    <div class="mono" data-rv style="opacity:.85">Contact</div>
     <h2 class="display" data-rv>Let’s build<br />something worth running.</h2>
     <a class="contact__mail" id="mail" href={`mailto:${mail}`} data-mail={mail}><span class="copied">Copied ✓</span>{mail}</a>
     <div class="contact__links" data-rv>

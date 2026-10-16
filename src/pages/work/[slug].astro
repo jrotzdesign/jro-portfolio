@@ -5,6 +5,9 @@ import MotionCard from '../../components/MotionCard.astro';
 import Film from '../../components/Film.astro';
 import { projects } from '../../data/projects.js';
 import { motionFor } from '../../data/motion.js';
+import { projectTitle, projectDescription, creativeWork, breadcrumbs, person, graph } from '../../data/seo.js';
+import { altFor } from '../../data/alt.js';
+import { dims } from '../../data/dims.js';
 
 export function getStaticPaths() {
   return projects.map((p, i) => ({ params: { slug: p.slug }, props: { p, i } }));
@@ -15,16 +18,26 @@ const prev = projects[(i - 1 + n) % n], next = projects[(i + 1) % n];
 const pad = (x) => String(x).padStart(2, '0');
 const credit = p.g === 'mozart' ? 'At Mozart&Co.' : 'JRO Design · independent';
 const mo = motionFor(p.slug);
-const ink = (hex) => { const n = parseInt(hex.slice(1), 16); return ((n >> 16) * 299 + ((n >> 8) & 255) * 587 + (n & 255) * 114) / 1000 > 150 ? 'var(--ink)' : 'var(--bone)'; };
+const ogImage = p.img ? `/og/${p.slug}.jpg` : '/og.jpg';
+// the Mozart&Co. case study, only where a real mozartcompany.com/work/ page exists (each was checked to return 200)
+const caseStudy = p.g === 'mozart' ? p.links.find(([label, url]) => /case study/i.test(label) && /^https:\/\/mozartcompany\.com\/work\/[\w-]+$/.test(url))?.[1] : null;
+const links = caseStudy ? p.links.filter(([, url]) => url !== caseStudy) : p.links;
+// swatch label colour: ink or bone, whichever reaches 4.5:1 on the swatch; pure black/white when neither does
+const lum = (hex) => { const n = parseInt(hex.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255].map((c) => { c /= 255; return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; }).reduce((a, c, i) => a + c * [0.2126, 0.7152, 0.0722][i], 0); };
+const ratio = (a, b) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+const ink = (hex) => {
+  const L = lum(hex), opts = [['var(--ink)', '#121316'], ['var(--bone)', '#f2f3f0'], ['#000', '#000000'], ['#fff', '#ffffff']];
+  return (opts.find(([, h]) => ratio(L, lum(h)) >= 4.5) ?? opts.reduce((x, y) => (ratio(L, lum(y[1])) > ratio(L, lum(x[1])) ? y : x)))[0];
+};
 ---
-<Base title={`${p.t} — Jose Ortiz`} description={p.intro} image={p.img ?? '/og.jpg'}>
+<Base title={projectTitle(p)} description={projectDescription(p)} ogImage={ogImage} ogImageAlt={p.img ? altFor(p.img, p) : p.t} jsonld={graph(creativeWork(p, ogImage), breadcrumbs(p), person())}>
 <main class="pp" id="work" data-slug={p.slug} data-prev={`/work/${prev.slug}/`} data-next={`/work/${next.slug}/`}>
   <div class="pp__bar">
     <div class="l"><a class="x" href="/#index">← Index</a><span id="ppN">{pad(i + 1)} / {pad(n)}</span></div>
     <div class="l"><a href={`/work/${prev.slug}/`} rel="prev">Prev</a><a href={`/work/${next.slug}/`} rel="next">Next →</a></div>
   </div>
 
-  <div class="pp__hero" id="ppHero"><Media p={p} loading="eager" /></div>
+  <div class="pp__hero" id="ppHero"><Media p={p} loading="eager" priority alt={p.img ? altFor(p.img, p) : ''} /></div>
 
   <div class="pp__head">
     <h1 class="display" data-in>{p.t}</h1>
@@ -95,17 +108,19 @@ const ink = (hex) => { const n = parseInt(hex.slice(1), 16); return ((n >> 16) *
 
   {p.gallery.length > 0 && (
     <div class="pp__gal">
-      {p.gallery.map((g) => <figure class={g.wide ? 'wide' : ''} data-rv><img src={g.src} loading="lazy" decoding="async" alt="" /></figure>)}
+      {p.gallery.map((g) => <figure class={g.wide ? 'wide' : ''} data-rv><img src={g.src} alt={altFor(g.src, p)} {...dims(g.src)} loading="lazy" decoding="async" /></figure>)}
     </div>
   )}
 
   <div class="pp__out">
     <h2 class="display" data-rv>{p.outcome}</h2>
     <div data-rv>
-      <div class="mono" style="opacity:.55;margin-bottom:.6rem">{credit}</div>
-      {p.links.length > 0 && <div class="pp__links">{p.links.map(([label, url]) => <a href={url} target="_blank" rel="noopener">{label}</a>)}</div>}
+      <div class="mono" style="opacity:.62;margin-bottom:.6rem">{credit}</div>
+      {links.length > 0 && <div class="pp__links">{links.map(([label, url]) => <a href={url} target="_blank" rel="noopener">{label}</a>)}</div>}
     </div>
   </div>
+
+  {caseStudy && <p class="pp__cs mono"><a href={caseStudy} target="_blank" rel="noopener">Case study at Mozart&amp;Co. →</a></p>}
 
   <div class="pp__next">
     <a href={`/work/${prev.slug}/`} class="p"><span class="mono">← Previous</span><b>{prev.t}</b></a>

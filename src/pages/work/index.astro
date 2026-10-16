@@ -3,8 +3,9 @@ import Base from '../../layouts/Base.astro';
 import ProjectIndex from '../../components/ProjectIndex.astro';
 import SiteLinks from '../../components/SiteLinks.astro';
 import { projects } from '../../data/projects.js';
+import { PAGES } from '../../data/seo.js';
 ---
-<Base title="Projects — Jose Ortiz" description="Brand, web, and motion projects from Mozart&Co. and JRO Design.">
+<Base title={PAGES.work.title} description={PAGES.work.description}>
 <main class="pp" id="page" data-esc="/">
   <div class="pp__bar">
     <div class="l"><a class="x" href="/">← Home</a><span class="sl"><SiteLinks current="work" /></span></div>
@@ -12,7 +13,7 @@ import { projects } from '../../data/projects.js';
   </div>
 
   <section class="index index--page" id="index">
-    <ProjectIndex>
+    <ProjectIndex eager={4}>
       <h1 slot="title" class="display" data-in>Projects</h1>
     </ProjectIndex>
   </section>

@@ -46,7 +46,7 @@ svg path{fill-rule:evenodd}
 .ch__img img{width:100%;height:100%;object-fit:cover}
 .ch__img .tile{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--night);color:var(--bone);font-family:var(--display);font-weight:500;font-size:3rem;letter-spacing:-.03em}
 .ch__cap{position:absolute;left:var(--pad);right:var(--pad);bottom:var(--pad);display:flex;justify-content:space-between;align-items:end;opacity:0;will-change:opacity,transform}
-.ch__cap h3{font-family:var(--display);font-weight:500;letter-spacing:-.03em;font-size:clamp(1.6rem,3.2vw,3rem);line-height:1}.ch__cap h3 a{border-bottom:2px solid transparent;transition:border-color .3s}.ch__cap h3 a:hover{border-color:var(--accent)}.ch__cap{pointer-events:auto}
+.ch__cap h2{font-family:var(--display);font-weight:500;letter-spacing:-.03em;font-size:clamp(1.6rem,3.2vw,3rem);line-height:1}.ch__cap h2 a{border-bottom:2px solid transparent;transition:border-color .3s}.ch__cap h2 a:hover{border-color:var(--accent)}.ch__cap{pointer-events:auto}
 .ch__cap p{max-width:38ch;color:var(--ink-2);font-size:.95rem;margin-top:.4rem}
 body[data-bg="night"] .ch__cap p,body[data-bg="night"] .hero__copy p{color:rgba(242,243,240,.6)}
 .ch__cap .mono{text-align:right;line-height:1.9;opacity:.7}
@@ -59,7 +59,7 @@ body[data-bg="night"] .ch__cap p,body[data-bg="night"] .hero__copy p{color:rgba(
 .index{padding:16vh var(--pad) 12vh}
 .index__head{display:flex;justify-content:space-between;align-items:end;margin-bottom:2.5rem}
 .index__head h2{font-size:clamp(2.4rem,5vw,5rem);white-space:nowrap}   /* shrink-wrapped by the flex row: hover widening must not wrap it */
-.filters{display:flex;gap:1.2rem}.filters button{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;opacity:.55;padding:.3rem 0;border-bottom:1px solid transparent}.filters button.on{opacity:1;border-color:currentColor}
+.filters{display:flex;gap:1.2rem}.filters button{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;opacity:.62;padding:.3rem 0;border-bottom:1px solid transparent}.filters button.on{opacity:1;border-color:currentColor}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem 1.2rem}
 .card{display:block;position:relative}
 .card.hide{display:none}
@@ -68,7 +68,7 @@ body[data-bg="night"] .ch__cap p,body[data-bg="night"] .hero__copy p{color:rgba(
 .card__m .tile{display:flex;align-items:center;justify-content:center;background:var(--night);color:var(--bone);font-family:var(--display);font-weight:500;font-size:1.6rem;letter-spacing:-.03em;padding:1rem;text-align:center}
 .card:hover .card__m img{transform:scale(1.05)}
 .card__t{margin-top:.6rem;font-family:var(--display);font-weight:500;letter-spacing:-.02em;font-size:1.05rem;display:flex;justify-content:space-between;gap:1rem}
-.card__t span{font-family:var(--mono);font-weight:400;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;opacity:.55;white-space:nowrap;padding-top:.2rem}
+.card__t span{font-family:var(--mono);font-weight:400;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;opacity:.62;white-space:nowrap;padding-top:.2rem}
 @media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}}
 
 /* about + contact */
@@ -76,7 +76,7 @@ body[data-bg="night"] .ch__cap p,body[data-bg="night"] .hero__copy p{color:rgba(
 .about h2{font-size:clamp(2rem,4vw,3.6rem);margin-bottom:1.2rem}
 .about p{font-size:1.1rem;line-height:1.6;color:var(--ink-2);max-width:56ch}.about p+p{margin-top:1rem}
 .facts{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem 2rem;align-content:start;padding-top:.6rem}
-.facts b{display:block;font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;opacity:.55;font-weight:400;margin-bottom:.3rem}
+.facts b{display:block;font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;opacity:.62;font-weight:400;margin-bottom:.3rem}
 .facts span{font-family:var(--display);font-weight:500;letter-spacing:-.02em;font-size:1.2rem}
 @media(max-width:800px){.about{grid-template-columns:1fr}}
 .contact{min-height:100svh;display:grid;grid-template-rows:1fr auto;position:relative;overflow:hidden;padding-top:14vh}
@@ -93,7 +93,7 @@ body[data-bg="night"] .ch__cap p,body[data-bg="night"] .hero__copy p{color:rgba(
 .pp__motion{padding:3.5rem var(--pad) 0}
 .pp__motion-head{display:flex;justify-content:space-between;align-items:baseline;gap:2rem;margin-bottom:1.4rem}
 .pp__motion-head h2{font-size:clamp(1.8rem,3.6vw,3.4rem);white-space:nowrap}
-.pp__motion-head .mono{opacity:.55;text-align:right}
+.pp__motion-head .mono{opacity:.62;text-align:right}
 .pp__mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
 .pp__mgrid.n1{grid-template-columns:1fr}.pp__mgrid.n2{grid-template-columns:1fr 1fr}
 .mo{margin:0;border-radius:6px;overflow:hidden;background:var(--mo-bg,var(--bone-2));position:relative;cursor:pointer}
@@ -115,16 +115,16 @@ body[data-bg="night"] .ch__cap p,body[data-bg="night"] .hero__copy p{color:rgba(
 /* story: numbered chapters, Mozart case-study rhythm (heading left, copy right) */
 .pp__story{padding:3.5rem var(--pad) 0;display:grid;gap:0}
 .pp__chap{display:grid;grid-template-columns:3rem 1fr 1.25fr;gap:2rem;align-items:baseline;padding:1.6rem 0;border-top:1px solid var(--line)}
-.pp__chap .mono{opacity:.45}
+.pp__chap .mono{opacity:.62}
 .pp__chap h2{font-size:clamp(1.5rem,2.6vw,2.4rem)}
 .pp__chap p{font-size:1.05rem;line-height:1.6;color:var(--ink-2);max-width:52ch}
 
 /* brand: typefaces + swatches (click a swatch to copy its hex) */
 .pp__brand{padding:3.5rem var(--pad) 0;display:grid;grid-template-columns:1fr 1.6fr;gap:2.5rem;align-items:start}
-.pp__lbl{opacity:.55;margin-bottom:1rem;border-top:1px solid var(--line);padding-top:.8rem}
+.pp__lbl{opacity:.62;margin-bottom:1rem;border-top:1px solid var(--line);padding-top:.8rem}
 .pp__face{display:flex;flex-direction:column;gap:.25rem;padding:.9rem 0;border-bottom:1px solid var(--line)}
 .pp__face b{font-family:var(--display);font-weight:500;letter-spacing:-.03em;font-size:clamp(1.5rem,2.6vw,2.2rem);line-height:1.05}
-.pp__face .mono{opacity:.55}
+.pp__face .mono{opacity:.62}
 .pp__sw{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:.6rem}
 .sw{position:relative;aspect-ratio:3/4;border-radius:6px;background:var(--c);color:var(--t);display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;gap:.2rem;padding:.8rem;text-align:left;box-shadow:inset 0 0 0 1px rgba(18,19,22,.08);transition:transform .5s var(--ease)}
 .sw:hover{transform:translateY(-4px)}
@@ -146,7 +146,7 @@ body[data-bg="night"] .ch__cap p,body[data-bg="night"] .hero__copy p{color:rgba(
 .film.on .film__play,.film.on img{opacity:0;pointer-events:none}
 .film__cap{display:flex;justify-content:space-between;gap:1rem;margin-top:.7rem;align-items:baseline}
 .film__cap b{font-family:var(--display);font-weight:500;letter-spacing:-.02em;font-size:1.1rem}
-.film__cap .mono{opacity:.55}
+.film__cap .mono{opacity:.62}
 
 /* /in-motion/ */
 .reel__head{padding:2.4rem var(--pad) 0;display:grid;grid-template-columns:1.3fr 1fr;gap:2.5rem;align-items:end}
@@ -158,9 +158,9 @@ body[data-bg="night"] .ch__cap p,body[data-bg="night"] .hero__copy p{color:rgba(
 .cpage__head+.about{border-top:0;padding-top:6vh}
 .cfwrap{background:var(--accent);color:var(--accent-ink)}.cfwrap .acc{color:var(--accent-ink)}
 .cf{display:grid;grid-template-columns:1fr 1fr;gap:4rem;padding:12vh var(--pad) 10vh}
-.cf__side h2{font-size:clamp(2.4rem,5.6vw,5.4rem)}.cf__clock{margin-top:2rem;opacity:.7}
+.cf__side h2{font-size:clamp(2.4rem,5.6vw,5.4rem)}.cf__clock{margin-top:2rem;opacity:.85}
 .cf__field{margin-bottom:1.6rem}
-.cf label{display:block;font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem}.cf__opt{opacity:.6}
+.cf label{display:block;font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem}.cf__opt{opacity:.85}
 .cf input,.cf select,.cf textarea{width:100%;font:500 1.15rem/1.4 var(--display);color:inherit;background:transparent;border:0;border-bottom:1px solid currentColor;border-radius:0;padding:.55rem 0;letter-spacing:-.01em}
 .cf textarea{resize:vertical;min-height:9rem;border:1px solid currentColor;padding:.7rem .8rem}
 .cf select{appearance:none;-webkit-appearance:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%230b1513' stroke-width='1.6'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E") no-repeat right .2rem center;padding-right:1.6rem}
@@ -181,7 +181,7 @@ body[data-bg="night"] .ch__cap p,body[data-bg="night"] .hero__copy p{color:rgba(
 .reel__group{padding:4rem var(--pad) 0}
 .reel__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem 1.2rem}
 .reel__item{display:flex;flex-direction:column;gap:.6rem;scroll-margin-top:6rem}
-.reel__famn{margin:-.4rem 0 1rem;opacity:.55}
+.reel__famn{margin:-.4rem 0 1rem;opacity:.62}
 .reel__link{opacity:.6;align-self:flex-start;border-bottom:1px solid transparent;transition:opacity .3s,border-color .3s}
 .reel__link:hover{opacity:1;border-color:currentColor}
 .reel__fam{margin-top:2.2rem}.reel__fam:first-of-type{margin-top:0}
@@ -201,7 +201,7 @@ body[data-bg="night"] .ch__cap p,body[data-bg="night"] .hero__copy p{color:rgba(
 .pp__head{padding:2.2rem var(--pad) 0;display:grid;grid-template-columns:1.3fr 1fr;gap:2.5rem;align-items:end}
 .pp__head h1{font-size:clamp(2.8rem,7vw,7rem)}
 .pp__meta{display:grid;grid-template-columns:1fr 1fr;gap:1rem 1.5rem;border-top:1px solid var(--line);padding-top:1rem}
-.pp__meta b{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;opacity:.55;font-weight:400;margin-bottom:.2rem}
+.pp__meta b{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;opacity:.62;font-weight:400;margin-bottom:.2rem}
 .pp__meta span{font-family:var(--display);font-weight:500;letter-spacing:-.02em;font-size:1rem;line-height:1.25}
 .pp__intro{padding:3rem var(--pad) 0;display:grid;grid-template-columns:1.3fr 1fr;gap:2.5rem}
 .pp__intro p{font-family:var(--display);font-weight:400;letter-spacing:-.02em;font-size:clamp(1.3rem,2.2vw,2rem);line-height:1.25;max-width:30ch}
@@ -218,14 +218,16 @@ body[data-bg="night"] .ch__cap p,body[data-bg="night"] .hero__copy p{color:rgba(
 .pp__links{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.4rem}
 .pp__links a{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;border:1px solid currentColor;border-radius:999px;padding:.7rem 1.1rem;transition:background .3s,color .3s,border-color .3s}
 .pp__links a:hover{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.pp__cs{margin:3.5rem var(--pad) 0;font-size:.68rem;letter-spacing:.1em}.pp__cs a{opacity:.6;border-bottom:1px solid currentColor;padding-bottom:.2rem;transition:opacity .3s}.pp__cs a:hover,.pp__cs a:focus-visible{opacity:1}
 .pp__next{margin:5rem var(--pad) 0;padding:2rem 0 4rem;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:baseline;gap:2rem}
 .pp__next a{display:flex;flex-direction:column;gap:.5rem;color:inherit;text-decoration:none}
-.pp__next a .mono{opacity:.5}
+.pp__next a .mono{opacity:.62}
 .pp__next a b{font-family:var(--display);font-weight:500;font-size:clamp(1.3rem,2.4vw,2rem);letter-spacing:-.03em;line-height:1.05;transition:color .25s}
 .pp__next a:hover b{color:var(--accent)}
 .pp__next a.n{text-align:right;align-items:flex-end}
 @media(max-width:800px){.pp__head,.pp__intro,.pp__out{grid-template-columns:1fr}.pp__gal{grid-template-columns:1fr}.pp__gal figure.wide{grid-column:auto;aspect-ratio:4/3}.pp__next{flex-direction:column;align-items:stretch}.pp__next a.n{align-items:flex-start;text-align:left}.pp__hero{aspect-ratio:4/3}}
 
+/* grey mono labels: 62% ink on bone is the lightest that still reaches 4.5:1; 85% ink on the teal accent */
 /* ═══ phones (≤700px) — one pass over every section ═══ */
 @media(max-width:700px){
   /* nav: the one page link stays visible on phones */
@@ -237,7 +239,7 @@ body[data-bg="night"] .ch__cap p,body[data-bg="night"] .hero__copy p{color:rgba(
   .hero{height:280svh}.ch{height:220svh}.ch__num{top:4.6rem}
   .ch__img{width:88vw;aspect-ratio:4/3;top:43%;border-radius:5px;box-shadow:0 24px 60px rgba(0,0,0,.22)}
   .ch__img .tile{font-size:2.2rem}
-  .ch__cap h3{font-size:clamp(1.35rem,6.5vw,1.8rem)}.ch__cap p{font-size:.9rem;max-width:none}
+  .ch__cap h2{font-size:clamp(1.35rem,6.5vw,1.8rem)}.ch__cap p{font-size:.9rem;max-width:none}
   /* index: heading and filters stack; cards keep two columns but the title and tag stack */
   .index{padding:12vh var(--pad) 8vh}
   .index__head{flex-direction:column;align-items:flex-start;gap:1.2rem;margin-bottom:1.8rem}

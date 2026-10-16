@@ -2,14 +2,28 @@
 import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
 
-interface Props { title?: string; description?: string; image?: string; bg?: 'bone' | 'night' | 'accent' }
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;            // a 1200×630 card; project pages pass /og/<slug>.jpg
+  ogImageAlt?: string;
+  noindex?: boolean;           // only the 404 page
+  jsonld?: object;             // a schema.org @graph (see src/data/seo.js)
+  bg?: 'bone' | 'night' | 'accent';
+}
 const {
-  title = 'Jose Ortiz — JRO Design',
-  description = 'Jose Ortiz · Design Director at Mozart & Co. and JRO Design. Brand systems, web at scale, and motion.',
-  image = '/og.jpg',
+  title = 'Jose Ortiz — Design Director, Brand & Web · New York',
+  description = 'Jose Ortiz is a design director in New York working on brand systems, web at scale and motion. JRO Design is his independent practice.',
+  ogImage = '/og.jpg',
+  ogImageAlt = 'Jose Ortiz — JRO Design',
+  noindex = false,
+  jsonld,
   bg = 'bone',
 } = Astro.props;
-const canonical = new URL(Astro.url.pathname, Astro.site);
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const image = new URL(ogImage, Astro.site).href;
+// JSON in a <script> must not be able to close the tag early
+const ld = jsonld ? JSON.stringify(jsonld).replace(/</g, '\\u003c') : null;
 ---
 <!doctype html>
 <html lang="en">
@@ -18,14 +32,26 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{title}</title>
   <meta name="description" content={description} />
-  <link rel="canonical" href={canonical} />
-  <meta name="robots" content="noindex, nofollow, noarchive" />
+  {!noindex && <link rel="canonical" href={canonical} />}
+  <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow'} />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="sitemap" href="/sitemap-index.xml" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Jose Ortiz" />
+  <meta property="og:locale" content="en_US" />
+  {!noindex && <meta property="og:url" content={canonical} />}
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
-  <meta property="og:image" content={new URL(image, Astro.site)} />
-  <meta property="og:type" content="website" />
+  <meta property="og:image" content={image} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content={ogImageAlt} />
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={image} />
+  <meta name="twitter:image:alt" content={ogImageAlt} />
+  {ld && <script type="application/ld+json" set:html={ld} />}
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Figtree:wght@400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />

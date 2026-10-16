@@ -2,10 +2,16 @@
 // Errors and success are announced through the #cf-status live region.
 import { EMAIL as MAIL } from '../data/site.js';
 
+// must match functions/api/contact.js: the server silently drops anything sent < 3 s or > 2 h after the form loaded
+const MIN_MS = 3000, MAX_MS = 2 * 60 * 60 * 1000;
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
 export function initContactForm(root = document) {
   const form = root.querySelector('#cform');
   if (!form) return () => {};
   const status = root.querySelector('#cf-status');
+  // time trap: when the form appeared (the visitor's own clock; the server checks only the gap to the submit time)
+  if (form.elements.jro_ts) form.elements.jro_ts.value = String(Date.now());
   const button = form.querySelector('button[type="submit"]');
   const fields = { name: form.elements.name, email: form.elements.email, message: form.elements.message };
   const messages = { name: 'Add your name.', email: 'Add an email address I can reply to.', message: 'Add a message.' };
@@ -49,12 +55,19 @@ export function initContactForm(root = document) {
     const label = button.textContent;
     button.disabled = true; button.textContent = 'Sending…'; form.setAttribute('aria-busy', 'true');
     try {
+      // a real visitor must never trip the time trap: too fast → wait out the rest; tab open for hours, restored from
+      // the back/forward cache, or no timestamp → start the clock again now (bots don't run this script)
+      let ts = Number(form.elements.jro_ts?.value) || 0;
+      if (!ts || Date.now() - ts > MAX_MS - 60000) ts = Date.now() - MIN_MS - 500;
+      const short = MIN_MS + 250 - (Date.now() - ts);
+      if (short > 0) await wait(short);
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: fields.name.value.trim(), email: fields.email.value.trim(), topic: form.elements.topic.value,
           message: fields.message.value.trim(), jro_hp_ref: form.elements.jro_hp_ref?.value ?? '', page: location.pathname,
+          jro_ts: ts, jro_sent: Date.now(),
         }),
       });
       const data = await res.json().catch(() => null);

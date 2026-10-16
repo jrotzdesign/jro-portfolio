@@ -3,10 +3,11 @@ import Base from '../layouts/Base.astro';
 import About from '../components/About.astro';
 import SiteLinks from '../components/SiteLinks.astro';
 import { EMAIL } from '../data/site.js';
+import { PAGES, person, graph } from '../data/seo.js';
 const mail = EMAIL;
 const topics = ['Brand identity', 'Website', 'Motion', 'Something else'];
 ---
-<Base title="About & contact — Jose Ortiz" description="About Jose Ortiz, and how to reach him by form or email.">
+<Base title={PAGES.contact.title} description={PAGES.contact.description} jsonld={graph(person())}>
 <main class="pp" id="page" data-esc="/">
   <div class="pp__bar">
     <div class="l"><a class="x" href="/">← Home</a><span class="sl"><SiteLinks current="contact" /></span></div>
@@ -21,7 +22,7 @@ const topics = ['Brand identity', 'Website', 'Motion', 'Something else'];
   <div class="cfwrap">
     <section class="cf" id="contact" aria-labelledby="cf-title">
       <div class="cf__side">
-        <div class="mono" data-rv style="opacity:.7">Contact</div>
+        <div class="mono" data-rv style="opacity:.85">Contact</div>
         <h2 class="display" id="cf-title" data-rv>Let’s build<br />something worth running.</h2>
         <a class="contact__mail" id="mail" href={`mailto:${mail}`} data-mail={mail}><span class="copied">Copied ✓</span>{mail}</a>
         <div class="contact__links" data-rv>
@@ -59,6 +60,7 @@ const topics = ['Brand identity', 'Website', 'Motion', 'Something else'];
             <label for="jro-hp">Leave this field empty</label>
             <input id="jro-hp" name="jro_hp_ref" type="text" tabindex="-1" autocomplete="off" />
           </div>
+          <input type="hidden" name="jro_ts" value="" />
           <button type="submit">Send</button>
         </form>
         <p class="cf__status" id="cf-status" role="status" aria-live="polite"></p>

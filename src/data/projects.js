@@ -68,7 +68,7 @@ export const projects=[
       brand:{type:[{role:'Titles, subtitles & text',name:'General Sans'},{role:'Specific words',name:'Weave'}],
         palette:[{name:'Off White',hex:'#F9F9F4'},{name:'Blue Sky',hex:'#BBD3F9'},{name:'Petroleum Green',hex:'#0F4556'},{name:'Bronze Foil',hex:'#A77043'}]},
       films:[{vimeo:'1035980010',poster:'/img/films/1035980010.webp',title:'Brand motion',len:'0:48'},{vimeo:'982573882',poster:'/img/films/982573882.webp',title:'Feature film',len:'2:08'}],
-      gallery:[{src:'/img/gallery/glades-west--aerial.webp',wide:true},{src:'/img/gallery/glades-west--symbols.webp'},{src:'/img/gallery/glades-west--gallery-a-1.webp'},{src:'/img/gallery/glades-west--patient-walking.webp'}],
+      gallery:[{src:'/img/gallery/glades-west--palette.webp',wide:true},{src:'/img/gallery/glades-west--team.webp'},{src:'/img/gallery/glades-west--building-sign.webp'},{src:'/img/gallery/glades-west--graduation.webp'}],
       outcome:'Warm enough for a family choosing rehab for a parent, sharp enough for a discharge planner deciding where to refer.',links:[['Full case study ↗','https://mozartcompany.com/work/glades-west']]},
     {slug:'village-place',t:'Village Place',cat:'Environment',g:'mozart',img:'/img/village-place-lobby-receptionist.webp',href:'https://mozartcompany.com/work/village-place',client:'Village Place Health & Rehab · Port Charlotte, FL',role:'Design Director · brand & digital',year:'2025',stack:'Identity · Photography · Film · Web',
       intro:'A hurricane took the building down to the studs. We came in for the relaunch — brand, photography, facility film and digital — and the building filled 104 beds in four months.',

@@ -29,15 +29,21 @@ Edit `src/data/projects.js`. Drop images in `public/img/` (≤ 2000 px, webp) an
 
 Cloudflare Pages, Git integration: build command `npm run build`, output directory `dist`, Node 20+. Custom domain `jrortizdesign.com`.
 
-## Password gate
+## Public site, caching and SEO
 
-`functions/_middleware.js` runs on Cloudflare Pages in front of every request. If the `SITE_PASSWORD` secret is set on the Pages project, visitors without the signed cookie get the gate page (`functions/gate.js`) instead of the site; the right word sets a 30-day HttpOnly cookie. Set or change the word with `npx wrangler pages secret put SITE_PASSWORD --project-name jro-portfolio`; delete the secret to open the site to everyone. For local testing put `SITE_PASSWORD=…` in `.dev.vars` (git-ignored) and run `npx wrangler pages dev dist`. Visiting `/__gate/leave` clears the cookie.
+The site is public and indexed. `functions/_middleware.js` does two things in front of every request: it 301s `www.jrortizdesign.com/*` to `https://jrortizdesign.com/*` (same path and query), and it sends `Cache-Control: public, max-age=0, must-revalidate` on HTML so a deploy shows up at once and pages stay eligible for the back/forward cache. `/img/*` and `/_astro/*` keep a one-year immutable cache (`public/_headers`).
+
+- **Titles, descriptions, JSON-LD:** `src/data/seo.js` (titles under 60 characters, descriptions 140–160). Home and `/contact/` carry a `Person`, home a `WebSite`, each project a `CreativeWork` and a `BreadcrumbList`.
+- **Social cards:** `scripts/prebuild.mjs` crops every project image to a 1200×630 JPEG in `public/og/<slug>.jpg` (git-ignored, rebuilt as needed) and records every image's size in `src/data/img-dims.json` for `width`/`height` attributes. `/og.jpg` is the site-wide card.
+- **Alt text:** `src/data/alt.js`, written from what each image shows.
+- **Sitemap and robots:** `@astrojs/sitemap` writes `sitemap-index.xml` (every page but the 404); `public/robots.txt` allows everything and points at it. Only the 404 page is `noindex`.
+- **Checks:** `npm run build` ends with `scripts/check-seo.mjs`, which fails the build on a missing or out-of-range title or description, more or fewer than one `h1`, a missing `og:*`/`twitter:*` tag, an `og:image` that isn't a real 1200×630 file, invalid JSON-LD, an `<img>` without `alt` or `width`/`height`, or a sitemap that misses a page.
 
 ## Pages and the contact form
 
 Routes: `/` home, `/work/` projects (the same card grid and filters as the home index, one shared component), `/contact/` about + contact form, `/in-motion/`, `/work/<slug>/`, and `404.astro`. The nav is Projects · In motion · Contact.
 
-`/contact/` posts JSON to `functions/api/contact.js` (a Pages Function behind the gate). It drops honeypot submissions silently, validates on the server, and sends a plain-text email through the Cloudflare Email Service. Without the secrets it returns `503 {"ok":false,"reason":"not-configured"}` and the page shows the "email me directly" fallback.
+`/contact/` posts JSON to `functions/api/contact.js` (a Pages Function). It silently drops honeypot hits and submissions sent faster than 3 seconds or more than 2 hours after the page loaded, validates on the server, and sends a plain-text email through the Cloudflare Email Service. Without the secrets it returns `503 {"ok":false,"reason":"not-configured"}` and the page shows the "email me directly" fallback.
 
 ## Contact form setup
 
@@ -51,7 +57,7 @@ Four steps in the Cloudflare dashboard:
    - `CF_ACCOUNT_ID`: the account ID (`5017f0d78a38195a445b1619c32d4f86`)
    - `CONTACT_TO` (optional): where inquiries go; defaults to `jrotz.design@gmail.com`
 
-Abuse protection: while the password gate is on, only visitors with the cookie can reach `/api/contact`. The function also refuses a POST whose `Origin` is another site and drops honeypot hits. If the gate is ever removed, add a Cloudflare rate-limiting rule for `POST /api/contact` (Security → WAF → Rate limiting rules) before launch, since the endpoint sends real email.
+Abuse protection: the endpoint is public. It refuses a POST whose `Origin` is another site, drops honeypot hits and anything faster than 3 seconds or older than 2 hours after the page loaded (both times from the visitor's own clock, so a wrong system clock can't drop a real message), and validates every field. For a launch, add a Cloudflare rate-limiting rule for `POST /api/contact` (Security → WAF → Rate limiting rules), since it sends real email.
 
 Mail is sent from `contact@jrortizdesign.com` with the visitor as Reply-To. The token is never in the repo or the client, and the function never logs it or the message text.
 

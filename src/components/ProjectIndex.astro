@@ -3,15 +3,17 @@
 // Used by the home page and /work/. Filter behaviour lives in src/scripts/filters.js.
 import Media from './Media.astro';
 import { projects } from '../data/projects.js';
+// eager: how many cards load immediately (the first visible row on /work/); the rest are lazy
+const { eager = 0 } = Astro.props;
 ---
 <div class="index__head">
   <slot name="title" />
   <div class="filters" data-rv><button class="on" data-f="all">All</button><button data-f="mozart">Mozart&amp;Co.</button><button data-f="jro">JRO Design</button></div>
 </div>
 <div class="grid" id="grid">
-  {projects.map((p) => (
+  {projects.map((p, k) => (
     <a class="card" href={`/work/${p.slug}/`} data-slug={p.slug} data-g={p.g} data-rv>
-      <div class="card__m"><Media p={p} /></div>
+      <div class="card__m"><Media p={p} loading={k < eager ? 'eager' : 'lazy'} priority={eager > 0 && k === 0} /></div>
       <div class="card__t">{p.t}<span>{p.cat}</span></div>
     </a>
   ))}
